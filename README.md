@@ -1,6 +1,6 @@
-# clib-game
+# clibgame
 
-`clib-game` stands for Common Library [for] Games. That is, I find myself
+`clibgame` stands for Common Library [for] Games. That is, I find myself
 writing the same utilities for developing games over and over again, so instead
 of continuing that pattern I decided to instead write more generic helper
 classes.
