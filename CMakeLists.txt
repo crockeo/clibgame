@@ -7,7 +7,7 @@ set(LIBRARY_OUTPUT_PATH    "${PROJECT_SOURCE_DIR}/build/lib")
 
 # Declaring the set of sources.
 set(SOURCES
-  src/clib-game/res/texture.cpp
+  src/clibgame/res/texture.cpp
 )
 
 # Adding this library.
