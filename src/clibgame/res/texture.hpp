@@ -1,9 +1,10 @@
-#pragma once
+#ifndef _CLIBGAME_RES_TEXTURE_
+#define _CLIBGAME_RES_TEXTURE_
 
 //////////////
 // Includes //
 #include <GL/glew.h>
-#include <vector>
+#include <string>
 
 //////////
 // Code //
@@ -34,5 +35,10 @@ namespace clibgame {
         int getHeight()   const;
         bool isOriginal() const;
         GLuint getID()    const;
+
+        // Binding this texture.
+        void bind() const;
     };
 }
+
+#endif
