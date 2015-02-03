@@ -1,3 +1,10 @@
+/* Name: clibgame/res/texture.hpp
+ *
+ * Description:
+ *   This is meant to contain information surrounding the creation and use of
+ *   textures.
+ */
+
 #ifndef _CLIBGAME_RES_TEXTURE_
 #define _CLIBGAME_RES_TEXTURE_
 
