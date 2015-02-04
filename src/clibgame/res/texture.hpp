@@ -39,6 +39,9 @@ namespace clibgame {
         // Assignment operator.
         Texture& operator=(const Texture&);
 
+        // Destroying this texture.
+        ~Texture();
+
         // Some accessors.
         int getWidth()                          const;
         int getHeight()                         const;

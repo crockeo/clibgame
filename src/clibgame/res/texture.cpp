@@ -188,12 +188,19 @@ clibgame::Texture::Texture(const clibgame::Texture& tex) {
 
 // Assignment operator.
 clibgame::Texture& clibgame::Texture::operator=(const clibgame::Texture& tex) {
+    this->destroy();
+
     this->width    = tex.width;
     this->height   = tex.height;
     this->original = false;
     this->id       = tex.id;
 
     return *this;
+}
+
+// Destroying this texture.
+clibgame::Texture::~Texture() {
+    this->destroy();
 }
 
 // Some accessors.
