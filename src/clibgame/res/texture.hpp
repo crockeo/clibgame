@@ -1,9 +1,8 @@
-/* Name: clibgame/res/texture.hpp
- *
- * Description:
- *   This is meant to contain information surrounding the creation and use of
- *   textures.
- */
+// Name: clibgame/res/texture.hpp
+//
+// Description:
+//   This is meant to contain information surrounding the creation and use of
+//   textures.
 
 #ifndef _CLIBGAME_RES_TEXTURE_
 #define _CLIBGAME_RES_TEXTURE_
@@ -12,13 +11,16 @@
 // Includes //
 #include <GL/glew.h>
 #include <string>
+#include <vector>
+
+#include "texable.hpp"
 
 //////////
 // Code //
 
 namespace clibgame {
-    // A class to represent an OpenGL texture.
-    class Texture {
+    // A class to reapresent an OpenGL texture.
+    class Texture : public clibgame::Texable {
     private:
         int width, height;
         bool original;
@@ -38,10 +40,11 @@ namespace clibgame {
         Texture& operator=(const Texture&);
 
         // Some accessors.
-        int getWidth()    const;
-        int getHeight()   const;
-        bool isOriginal() const;
-        GLuint getID()    const;
+        int getWidth()                          const;
+        int getHeight()                         const;
+        bool isOriginal()                       const;
+        GLuint getTextureID()                   const;
+        std::vector<GLfloat> getTextureCoords() const;
 
         // Binding this texture.
         void bind() const;

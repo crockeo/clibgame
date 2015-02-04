@@ -200,7 +200,15 @@ clibgame::Texture& clibgame::Texture::operator=(const clibgame::Texture& tex) {
 int clibgame::Texture::getWidth() const { return this->width; }
 int clibgame::Texture::getHeight() const { return this->height; }
 bool clibgame::Texture::isOriginal() const { return this->original; }
-GLuint clibgame::Texture::getID() const { return this->id; }
+GLuint clibgame::Texture::getTextureID() const { return this->id; }
+std::vector<GLfloat> clibgame::Texture::getTextureCoords() const {
+    return std::vector<GLfloat> {
+        0.f, 0.f,
+        1.f, 0.f,
+        1.f, 1.f,
+        0.f, 1.f
+    };
+}
 
 // Binding this texture.
 void clibgame::Texture::bind() const {
