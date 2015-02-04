@@ -14,7 +14,7 @@ set(SOURCES
 )
 
 # Adding this library.
-add_library(clibgame ${SOURCES})
+add_library(clibgame STATIC ${SOURCES})
 
 # Finding and setting up some packages.
 find_package(glew REQUIRED)
@@ -22,3 +22,12 @@ find_package(glew REQUIRED)
 include_directories(${GLEW_INCLUDE_DIRS})
 
 target_link_libraries(clibgame ${GLEW_LIBRARY})
+
+# Declaring how we should install this.
+install(TARGETS clibgame
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib/static)
+
+install(DIRECTORY src/
+        DESTINATION include
+        FILES_MATCHING PATTERN *.hpp)
