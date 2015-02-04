@@ -43,10 +43,12 @@ namespace clibgame {
         ~Texture();
 
         // Some accessors.
-        int getWidth()                          const;
-        int getHeight()                         const;
-        bool isOriginal()                       const;
-        GLuint getTextureID()                   const;
+        int getWidth()    const;
+        int getHeight()   const;
+        bool isOriginal() const;
+
+        // Texable
+        GLuint getTextureID() const;
         std::vector<GLfloat> getTextureCoords() const;
 
         // Binding this texture.

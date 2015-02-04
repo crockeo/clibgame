@@ -20,10 +20,10 @@ namespace clibgame {
     class Texable {
     public:
         // Getting the ID of this texture.
-        virtual GLuint getTextureID() = 0;
+        virtual GLuint getTextureID() const = 0;
 
         // Getting the desired texture coordinates to use with this texture.
-        virtual std::vector<GLfloat> getTextureCoords() = 0;
+        virtual std::vector<GLfloat> getTextureCoords() const = 0;
     };
 }
 
