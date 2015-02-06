@@ -10,5 +10,6 @@
 #include "clibgame/res/texsheet.hpp"
 #include "clibgame/res/texable.hpp"
 #include "clibgame/res/texture.hpp"
+#include "clibgame/timer.hpp"
 
 #endif
