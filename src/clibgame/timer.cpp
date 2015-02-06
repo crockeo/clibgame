@@ -4,17 +4,17 @@
 // Includes //
 #include <chrono>
 
+#include "delta.hpp"
+
 //////////
 // Code //
 
 namespace clibgame {
     // The update loop function for the timer.
     void updateTimerFn(const float& fidelity, const bool& running, const float& cap, float& time) {
-        float last = 0.f,
-              now  = 0.f;
-
+        Delta d;
         while (running) {
-            // TODO: Update the time.
+            time += d.since();
             std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(fidelity * 1000)));
         }
     }
