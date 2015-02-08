@@ -15,7 +15,7 @@ namespace clibgame {
         Delta d;
         while (running) {
             time += d.since();
-            std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(fidelity * 1000)));
+            clibgame::delayThread(fidelity);
         }
     }
 }
