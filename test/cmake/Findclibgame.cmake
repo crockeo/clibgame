@@ -13,7 +13,7 @@ find_path(CLIBGAME_INCLUDE_DIRS clibgame.hpp
 )
 
 # Finding the clibgame library.
-find_library(CLIBGAME_LIBRARIES libclibgame.a
+find_library(CLIBGAME_LIBRARY libclibgame.a
   PATH_SUFFIXES lib lib/static
   PATHS ${SEARCH_DIRECTORIES}
 )
@@ -22,5 +22,5 @@ find_library(CLIBGAME_LIBRARIES libclibgame.a
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(
   CLIBGAME
-  REQUIRED_VARS CLIBGAME_INCLUDE_DIRS CLIBGAME_LIBRARIES
+  REQUIRED_VARS CLIBGAME_INCLUDE_DIRS CLIBGAME_LIBRARY
 )
