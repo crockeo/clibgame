@@ -6,6 +6,8 @@
 
 #include <iostream>
 
+#include "rendering.hpp"
+
 //////////
 // Code //
 
@@ -51,6 +53,9 @@ int main(int argc, char** argv) {
     glEnable(GL_DEPTH);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    // Preparing rendering.hpp
+    prepareRendering();
+
     // Starting the game loop thingy?
     clibgame::Delta d;
     while (!glfwWindowShouldClose(window)) {
@@ -60,7 +65,7 @@ int main(int argc, char** argv) {
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // TODO: Something here?
+        doRendering();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
