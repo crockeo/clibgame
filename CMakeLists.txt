@@ -13,6 +13,7 @@ set(SOURCES
   src/clibgame/res/animation.cpp
   src/clibgame/res/texsheet.cpp
   src/clibgame/res/texture.cpp
+  src/clibgame/res/shader.cpp
   src/clibgame/delta.cpp
   src/clibgame/timer.cpp
 )
