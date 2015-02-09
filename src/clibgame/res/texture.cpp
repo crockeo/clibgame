@@ -164,12 +164,6 @@ std::tuple<GLuint, int, int> loadPNG(std::string path) {
     return texture;
 }
 
-// Cleaning up the texture.
-void clibgame::Texture::destroy() {
-    if (this->original)
-        glDeleteTextures(1, &this->id);
-}
-
 // Loading a texture from the disk.
 clibgame::Texture::Texture(std::string path) {
     auto png = loadPNG(path);
@@ -186,21 +180,10 @@ clibgame::Texture::Texture(const clibgame::Texture& tex) {
     *this = tex;
 }
 
-// Assignment operator.
-clibgame::Texture& clibgame::Texture::operator=(const clibgame::Texture& tex) {
-    this->destroy();
-
-    this->width    = tex.width;
-    this->height   = tex.height;
-    this->original = false;
-    this->id       = tex.id;
-
-    return *this;
-}
-
 // Destroying this texture.
 clibgame::Texture::~Texture() {
-    this->destroy();
+    if (this->original)
+        glDeleteTextures(1, &this->id);
 }
 
 // Some accessors.

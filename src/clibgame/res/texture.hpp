@@ -36,9 +36,6 @@ namespace clibgame {
         // Copy constructor.
         Texture(const Texture&);
 
-        // Assignment operator.
-        Texture& operator=(const Texture&);
-
         // Destroying this texture.
         ~Texture();
 
