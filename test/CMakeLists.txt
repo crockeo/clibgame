@@ -18,15 +18,18 @@ add_executable(clibgame-test ${SOURCES})
 
 # Finding all these packages.
 find_package(clibgame REQUIRED)
+find_package(opengl REQUIRED)
 find_package(glew REQUIRED)
 find_package(glfw REQUIRED)
 
-# Libraries.
-target_link_libraries(clibgame-test ${CLIBGAME_LIBRARY}
-                                    ${GLEW_LIBRARY}
-                                    ${GLFW_LIBRARY})
-
 # Include directories.
 include_directories(${CLIBGAME_INCLUDE_DIRS}
+                    ${OPENGL_INCLUDE_DIRS}
                     ${GLEW_INCLUDE_DIRS}
                     ${GLFW_INCLUDE_DIRS})
+
+# Libraries.
+target_link_libraries(clibgame-test ${CLIBGAME_LIBRARY}
+                                    ${OPENGL_LIBRARY}
+                                    ${GLEW_LIBRARY}
+                                    ${GLFW_LIBRARY})
