@@ -17,6 +17,26 @@
 namespace clibgame {
     // Loading a specific type of shader.
     GLuint loadShader(std::string, GLenum) throw(std::runtime_error);
+
+    // The shader program class.
+    class Shader {
+    private:
+        bool original;
+        GLuint id;
+
+    public:
+        // Loading a shader from a location on disk.
+        Shader(std::string) throw(std::runtime_error);
+
+        // Copying this shader.
+        Shader(const Shader&);
+
+        // Destroying this shader.
+        ~Shader();
+
+        // Getting the ID of this shader.
+        GLuint getShaderID();
+    };
 }
 
 #endif

@@ -23,10 +23,13 @@ add_library(clibgame STATIC ${SOURCES})
 
 # Finding and setting up some packages.
 find_package(glew REQUIRED)
+find_package(png REQUIRED)
 
-include_directories(${GLEW_INCLUDE_DIRS})
+include_directories(${GLEW_INCLUDE_DIRS}
+                    ${PNG_INCLUDE_DIRS})
 
-target_link_libraries(clibgame ${GLEW_LIBRARY})
+target_link_libraries(clibgame ${GLEW_LIBRARY}
+                               ${PNG_LIBRARY})
 
 # Declaring how we should install this.
 install(TARGETS clibgame
