@@ -8,7 +8,10 @@
 //////////
 // Code //
 
+#include <iostream>
+
 struct TextureRender {
+    GLuint vao;
     GLuint vbo;
     GLuint ebo;
     clibgame::Texture* texture;
@@ -18,6 +21,9 @@ struct TextureRender {
     TextureRender(float x, float y, float w, float h) {
         this->texture = new clibgame::Texture("res/test.png");
         this->shader = new clibgame::Shader("res/test");
+
+        // Making the VAO.
+        glGenVertexArrays(1, &this->vao);
 
         // Making the VBO.
         glGenBuffers(1, &this->vbo);
@@ -54,7 +60,24 @@ struct TextureRender {
 
     // Rendering the TextureRender.
     void render() {
-        // TODO: Actually perform a render.
+        glBindVertexArray(this->vao);
+        glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
+
+        glUseProgram(this->shader->getShaderID());
+
+        // Initializing the coordinates.
+        GLint coordAttrib = glGetAttribLocation(this->shader->getShaderID(), "in_coordinates");
+
+        glEnableVertexAttribArray(coordAttrib);
+        glVertexAttribPointer(coordAttrib, 4, GL_FLOAT, GL_FALSE, 0, 0);
+
+        // Initializing the texture.
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, this->texture->getTextureID());
+        glUniform1i(glGetUniformLocation(this->shader->getShaderID(), "in_tex"), 0);
+
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
 };
 

@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
         if (t < 1.f / UPDATES_PER_SECOND)
             clibgame::delayThread(1.f / UPDATES_PER_SECOND - t);
 
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         doRendering();
 
