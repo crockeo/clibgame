@@ -70,6 +70,7 @@ clibgame::Shader::Shader(std::string path) throw(std::runtime_error) {
         if (fragShader != 0) glAttachShader(id, fragShader);
         if (geomShader != 0) glAttachShader(id, geomShader);
 
+        glBindFragDataLocation(this->id, 0, "out_color");
         glLinkProgram(this->id);
 
         glDeleteShader(vertShader);
