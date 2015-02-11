@@ -9,7 +9,7 @@
 // Code //
 
 // Getting the current time in seconds from the last epoch.
-float clibgame::getCurrentTime() {
+long clibgame::getCurrentTime() {
     auto now = std::chrono::system_clock::now();
     return std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
 }
@@ -33,5 +33,5 @@ float clibgame::Delta::since() {
     if (this->last == 0.f)
         return 0.f;
 
-    return this->curr - this->last;
+    return (this->curr - this->last) / 1000.f;
 }

@@ -12,7 +12,7 @@
 
 namespace clibgame {
     // Getting the current time in seconds from the last epoch.
-    float getCurrentTime();
+    long getCurrentTime();
 
     // Delaying the current thread for a given period of seconds.
     void delayThread(float);
@@ -20,7 +20,7 @@ namespace clibgame {
     // The delta-time class.
     class Delta {
     private:
-        float last, curr;
+        long last, curr;
 
     public:
         // Creating a new delta.
