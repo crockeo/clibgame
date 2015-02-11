@@ -10,4 +10,7 @@ void prepareRendering();
 // Performing a single render.
 void doRendering();
 
+// Cleaning up the rendering.
+void cleanRendering();
+
 #endif

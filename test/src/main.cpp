@@ -73,5 +73,6 @@ int main(int argc, char** argv) {
 
     // Closing up shop.
     glfwTerminate();
+    cleanRendering();
     return 0;
 }
