@@ -8,36 +8,62 @@
 //////////
 // Code //
 
-struct TextureRender {
+struct Render {
     GLuint vao;
     GLuint vbo;
     GLuint ebo;
-    clibgame::Texture* texture;
+    clibgame::Texable* texable;
     clibgame::Shader* shader;
 
     // Construcitng a new TextureRender.
-    TextureRender(float x, float y, float w, float h) {
-        this->texture = new clibgame::Texture("res/test.png");
-        this->shader = new clibgame::Shader("res/test");
-
-        // Making the VAO.
+    Render(clibgame::Texable* texable, clibgame::Shader* shader,
+           float x, float y, float w, float h) {
+        this->texable = texable;
+        this->shader = shader;
         glGenVertexArrays(1, &this->vao);
-
-        // Making the VBO.
         glGenBuffers(1, &this->vbo);
+        glGenBuffers(1, &this->ebo);
+
+        this->updateVertices(x, y, w, h);
+    }
+
+    // Cleaning this bad boy up.
+    ~Render() {
+        glDeleteBuffers(1, &this->vbo);
+        glDeleteBuffers(1, &this->ebo);
+        delete this->texable;
+        delete this->shader;
+    }
+
+    // Updating the set of vertices and texture coordinates.
+    void updateVertices(float x, float y, float w, float h) {
         glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
 
-        GLfloat coords[] {
-            x    , y    , 0, 0,
-            x + w, y    , 1, 0,
-            x + w, y + h, 1, 1,
-            x    , y + h, 0, 1
+        std::vector<GLfloat> tCoords = texable->getTextureCoords();
+        std::vector<GLfloat> cCoords = {
+            x    , y    ,
+            x + w, y    ,
+            x + w, y + h,
+            x    , y + h
         };
 
-        glBufferData(GL_ARRAY_BUFFER, sizeof(coords), coords, GL_STATIC_DRAW);
+        GLfloat coords[cCoords.size() * 2];
+        int lvc = 0, evc = 0, tvc = 0;
+        while (lvc < cCoords.size() * 2 && evc < cCoords.size()) {
+            coords[lvc    ] = cCoords[evc    ];
+            coords[lvc + 1] = cCoords[evc + 1];
+            coords[lvc + 2] = tCoords[tvc    ];
+            coords[lvc + 3] = tCoords[tvc + 1];
 
-        // Making the EBO.
-        glGenBuffers(1, &this->ebo);
+            lvc += 4;
+            evc += 2;
+            tvc += 2;
+            if (tvc >= tCoords.size())
+                tvc = 0;
+        }
+
+        glBufferData(GL_ARRAY_BUFFER, sizeof(coords), coords, GL_DYNAMIC_DRAW);
+
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
 
         GLuint order[] {
@@ -45,15 +71,7 @@ struct TextureRender {
             2, 3, 0
         };
 
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(order), order, GL_STATIC_DRAW);
-    }
-
-    // Cleaning this bad boy up.
-    ~TextureRender() {
-        glDeleteBuffers(1, &this->vbo);
-        glDeleteBuffers(1, &this->ebo);
-        delete this->texture;
-        delete this->shader;
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(order), order, GL_DYNAMIC_DRAW);
     }
 
     // Rendering the TextureRender.
@@ -72,7 +90,7 @@ struct TextureRender {
 
         // Initializing the texture.
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, this->texture->getTextureID());
+        glBindTexture(GL_TEXTURE_2D, this->texable->getTextureID());
         glUniform1i(glGetUniformLocation(this->shader->getShaderID(), "in_tex"), 0);
 
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -80,19 +98,37 @@ struct TextureRender {
 };
 
 // The global textureRender.
-static TextureRender* textureRender;
+static Render* textureRender;
+static Render* texSheetRender;
+static Render* animationRender;
 
 // Preparing a render.
 void prepareRendering() {
-    textureRender = new TextureRender(-0.5, -0.5, 1, 1);
+    textureRender = new Render(new clibgame::Texture("res/test.png"),
+                               new clibgame::Shader("res/test"),
+                               -1, -1, 0.2, 0.2);
+
+    texSheetRender = new Render(new clibgame::TexSheet("res/test.png", 2, 2),
+                                new clibgame::Shader("res/test"),
+                                -0.75, -1, 0.2, 0.2);
+
+    animationRender = new Render(new clibgame::Animation("res/test.png", 2, 2, 0.5f),
+                                 new clibgame::Shader("res/test"),
+                                 -1, -0.75, 0.2, 0.2);
 }
 
 // Performing a single render.
 void doRendering() {
     textureRender->render();
+    texSheetRender->render();
+
+    animationRender->updateVertices(-1, -0.75, 0.2, 0.2);
+    animationRender->render();
 }
 
 // Cleaning up the rendering.
 void cleanRendering() {
     delete textureRender;
+    delete texSheetRender;
+    delete animationRender;
 }
