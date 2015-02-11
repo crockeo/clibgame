@@ -8,8 +8,6 @@
 //////////
 // Code //
 
-#include <iostream>
-
 struct TextureRender {
     GLuint vao;
     GLuint vbo;
