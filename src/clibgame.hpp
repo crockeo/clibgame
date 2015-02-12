@@ -12,6 +12,7 @@
 #include "clibgame/res/texable.hpp"
 #include "clibgame/res/texture.hpp"
 #include "clibgame/res/shader.hpp"
+#include "clibgame/eventing.hpp"
 #include "clibgame/delta.hpp"
 #include "clibgame/timer.hpp"
 
