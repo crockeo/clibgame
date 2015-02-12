@@ -19,6 +19,9 @@ namespace clibgame {
     // The abstract class.
     class Texable {
     public:
+        // The default destructor.
+        virtual ~Texable() { }
+
         // Getting the ID of this texture.
         virtual GLuint getTextureID() const = 0;
 
