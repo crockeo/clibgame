@@ -4,9 +4,22 @@
 // Includes //
 #include <clibgame.hpp>
 #include <GL/glew.h>
+#include <iostream>
 
 //////////
 // Code //
+
+struct NothingEvent : public clibgame::Event {
+    std::string getEventType() const { return "nothingEvent"; }
+};
+
+struct NothingListener : public clibgame::Listener {
+    void alert(const clibgame::Event&& e) override {
+        if (e.getEventType().compare("nothingEvent") == 0) {
+            std::cout << "Got a nothing event!" << std::endl;
+        }
+    }
+};
 
 struct Render {
     GLuint vao;
@@ -76,6 +89,7 @@ struct Render {
 
     // Rendering the TextureRender.
     void render() {
+        clibgame::ListenerManager::instance().alert(NothingEvent());
         glBindVertexArray(this->vao);
         glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
@@ -101,9 +115,13 @@ struct Render {
 static Render* textureRender;
 static Render* texSheetRender;
 static Render* animationRender;
+static NothingListener* nl;
 
 // Preparing a render.
 void prepareRendering() {
+    nl = new NothingListener();
+    clibgame::ListenerManager::instance().registerListener(nl, "nothingEvent");
+
     textureRender = new Render(new clibgame::Texture("res/test.png"),
                                new clibgame::Shader("res/test"),
                                -1, -1, 0.2, 0.2);
