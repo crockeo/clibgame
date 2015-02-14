@@ -1,3 +1,9 @@
+// Name: eventing.hpp
+//
+// Description:
+//   This module provides the API to work with global eventing in a given
+//   application.
+
 #ifndef _CLIBGAME_EVENTING_HPP_
 #define _CLIBGAME_EVENTING_HPP_
 

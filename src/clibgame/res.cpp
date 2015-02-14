@@ -1,5 +1,8 @@
 #include "res.hpp"
 
+//////////
+// Code //
+
 // Creating an empty Res.
 clibgame::Res::Res() { }
 

@@ -1,3 +1,9 @@
+// Name: clibgame/res.hpp
+//
+// Description:
+//   This module provides asset management for the asset types contained in
+//   clibgame/res/
+
 #ifndef _CLIBGAME_RES_HPP_
 #define _CLIBGAME_RES_HPP_
 

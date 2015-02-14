@@ -1,3 +1,8 @@
+// Name: clibgame/ecp.hpp
+//
+// Description:
+//   This module provides an API for dealing with Entity Component Systems.
+
 #ifndef _CLIBGAME_ECP_HPP_
 #define _CLIBGAME_ECP_HPP_
 

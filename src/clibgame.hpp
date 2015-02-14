@@ -15,5 +15,7 @@
 #include "clibgame/eventing.hpp"
 #include "clibgame/delta.hpp"
 #include "clibgame/timer.hpp"
+#include "clibgame/ecp.hpp"
+#include "clibgame/res.hpp"
 
 #endif
