@@ -17,6 +17,7 @@ set(SOURCES
   src/clibgame/eventing.cpp
   src/clibgame/delta.cpp
   src/clibgame/timer.cpp
+  src/clibgame/ecp.cpp
 )
 
 # Adding this library.
