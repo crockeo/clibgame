@@ -12,7 +12,11 @@ Building this project requires CMake version `>= 2.8`.
 ```bash
 $ cmake .
 $ make
+$ make install # OPTIONAL - If you want to install the libraries / headers.
 ```
+
+If you choose to uninstall the library, the `uninstall.sh` in this directory
+removes all items added from the `install_manifest.txt`.
 
 ### Licensing
 
