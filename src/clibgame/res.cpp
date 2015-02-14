@@ -1,5 +1,9 @@
 #include "res.hpp"
 
+//////////////
+// Includes //
+#include <fstream>
+
 //////////
 // Code //
 
@@ -50,4 +54,43 @@ clibgame::Texture clibgame::Res::getTexture(std::string name) const {
 
 clibgame::Shader clibgame::Res::getShader(std::string name) const {
     return this->shaders.at(name);
+}
+
+// Loading a set of resources from an std::istream.
+void clibgame::loadRes(Res& res, std::istream& stream) throw (std::runtime_error) {
+    if (!stream.good() || stream.eof())
+        throw std::runtime_error("Stream is not good.");
+
+    std::string prefix, path;
+    while (!stream.eof()) {
+        stream >> prefix;
+        stream >> path;
+
+        if (prefix.compare("animation")) {
+            int cols, rows;
+            bool loops;
+
+            stream >> cols;
+            stream >> rows;
+            stream >> loops;
+
+            res.addAnimation(path, cols, rows, loops);
+        } else if (prefix.compare("texsheet")) {
+            int cols, rows;
+            stream >> cols;
+            stream >> rows;
+
+            res.addTexSheet(path, cols, rows);
+        } else if (prefix.compare("texture")) {
+            res.addTexture(path);
+        } else if (prefix.compare("shader")) {
+            res.addShader(path);
+        }
+    }
+}
+
+// Loading a set of resources from a file.
+void clibgame::loadRes(Res& res, std::string path) throw(std::runtime_error) {
+    std::ifstream file(path);
+    clibgame::loadRes(res, file);
 }

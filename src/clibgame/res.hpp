@@ -10,6 +10,7 @@
 //////////////
 // Includes //
 #include <unordered_map>
+#include <istream>
 #include <memory>
 
 #include "res/animation.hpp"
@@ -33,6 +34,12 @@ namespace clibgame {
         // Creating an empty Res.
         Res();
 
+        // Deleting the copy constructor.
+        Res(const Res&) = delete;
+
+        // Deleting the assignment operator.
+        Res& operator=(const Res&) = delete;
+
         // Adding a set of resources.
         void addAnimation(std::string, int, int, float, bool);
         void addAnimation(std::string, int, int, float);
@@ -46,6 +53,12 @@ namespace clibgame {
         Texture getTexture(std::string) const;
         Shader getShader(std::string) const;
     };
+
+    // Loading a set of resources from an std::istream.
+    void loadRes(Res&, std::istream&) throw (std::runtime_error);
+
+    // Loading a set of resources from a file.
+    void loadRes(Res&, std::string) throw(std::runtime_error);
 }
 
 #endif
