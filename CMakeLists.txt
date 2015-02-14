@@ -18,6 +18,7 @@ set(SOURCES
   src/clibgame/delta.cpp
   src/clibgame/timer.cpp
   src/clibgame/ecp.cpp
+  src/clibgame/res.cpp
 )
 
 # Adding this library.
