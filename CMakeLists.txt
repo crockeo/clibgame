@@ -15,6 +15,7 @@ set(SOURCES
   src/clibgame/res/texture.cpp
   src/clibgame/res/shader.cpp
   src/clibgame/eventing.cpp
+  src/clibgame/engine.cpp
   src/clibgame/delta.cpp
   src/clibgame/timer.cpp
   src/clibgame/ecp.cpp

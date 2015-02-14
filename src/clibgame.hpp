@@ -13,6 +13,7 @@
 #include "clibgame/res/texture.hpp"
 #include "clibgame/res/shader.hpp"
 #include "clibgame/eventing.hpp"
+#include "clibgame/engine.hpp"
 #include "clibgame/delta.hpp"
 #include "clibgame/timer.hpp"
 #include "clibgame/ecp.hpp"
