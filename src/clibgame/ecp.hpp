@@ -115,6 +115,12 @@ namespace clibgame {
 
         // Getting a reference to an entity.
         Entity& getEntity(std::string);
+
+        // Updating the set of entities.
+        void updateEntities(float);
+
+        // Rendering the set of entities.
+        void renderEntities() const;
     };
 }
 

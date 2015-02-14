@@ -100,3 +100,15 @@ const clibgame::Entity& clibgame::ECP::getEntity(std::string uid) const {
 clibgame::Entity& clibgame::ECP::getEntity(std::string uid) {
     return this->entities.at(uid);
 }
+
+// Updating the set of entities.
+void clibgame::ECP::updateEntities(float dt) {
+    for (auto& pair: this->entities)
+        std::get<1>(pair).updateComponents(*this, dt);
+}
+
+// Rendering the set of entities.
+void clibgame::ECP::renderEntities() const {
+    for (auto& pair: this->entities)
+        std::get<1>(pair).renderComponents();
+}
