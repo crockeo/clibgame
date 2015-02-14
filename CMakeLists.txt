@@ -12,6 +12,7 @@ set(LIBRARY_OUTPUT_PATH    "${PROJECT_SOURCE_DIR}/build/lib")
 set(SOURCES
   src/clibgame/res/animation.cpp
   src/clibgame/res/texsheet.cpp
+  src/clibgame/engineconfig.cpp
   src/clibgame/res/texture.cpp
   src/clibgame/res/shader.cpp
   src/clibgame/eventing.cpp
@@ -27,12 +28,15 @@ add_library(clibgame STATIC ${SOURCES})
 
 # Finding and setting up some packages.
 find_package(glew REQUIRED)
+find_package(glfw REQUIRED)
 find_package(png REQUIRED)
 
 include_directories(${GLEW_INCLUDE_DIRS}
+                    ${GLFW_INCLUDE_DIRS}
                     ${PNG_INCLUDE_DIRS})
 
 target_link_libraries(clibgame ${GLEW_LIBRARY}
+                               ${GLFW_LIBRARY}
                                ${PNG_LIBRARY})
 
 # Declaring how we should install this.
