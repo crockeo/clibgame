@@ -13,9 +13,10 @@ namespace clibgame {
         std::string title;
         int width, height;
         bool fullscreen;
+        int ups, rps;
 
-        // Initializing a configuration.
-        EngineConfig(std::string, int, int, bool);
+        // Creating a default EngineConfig.
+        EngineConfig();
     };
 };
 
