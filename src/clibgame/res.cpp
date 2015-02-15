@@ -56,6 +56,8 @@ clibgame::Shader clibgame::Res::getShader(std::string name) const {
     return this->shaders.at(name);
 }
 
+#include <iostream>
+
 // Loading a set of resources from an std::istream.
 void clibgame::loadRes(Res& res, std::istream& stream) throw (std::runtime_error) {
     if (!stream.good() || stream.eof())
@@ -66,7 +68,7 @@ void clibgame::loadRes(Res& res, std::istream& stream) throw (std::runtime_error
         stream >> prefix;
         stream >> path;
 
-        if (prefix.compare("animation")) {
+        if (prefix.compare("animation") == 0) {
             int cols, rows;
             bool loops;
 
@@ -75,15 +77,15 @@ void clibgame::loadRes(Res& res, std::istream& stream) throw (std::runtime_error
             stream >> loops;
 
             res.addAnimation(path, cols, rows, loops);
-        } else if (prefix.compare("texsheet")) {
+        } else if (prefix.compare("texsheet") == 0) {
             int cols, rows;
             stream >> cols;
             stream >> rows;
 
             res.addTexSheet(path, cols, rows);
-        } else if (prefix.compare("texture")) {
+        } else if (prefix.compare("texture") == 0) {
             res.addTexture(path);
-        } else if (prefix.compare("shader")) {
+        } else if (prefix.compare("shader") == 0) {
             res.addShader(path);
         }
     }
