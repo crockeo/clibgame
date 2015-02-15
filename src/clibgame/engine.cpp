@@ -5,8 +5,40 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "delta.hpp"
+
 //////////
 // Code //
+
+namespace clibgame {
+    // The render loop for the engine.
+    void renderLoop(GLFWwindow* window, EngineConfig cfg, const ECP& ecp, const Res& resources, bool& running) {
+        Delta delta;
+        while (running) {
+            float dt = delta.since();
+            if (dt < 1.f / cfg.rps)
+                clibgame::delayThread(1.f / cfg.rps - dt);
+
+            ecp.renderEntities();
+
+            glfwSwapBuffers(window);
+            glfwPollEvents();
+            running = glfwWindowShouldClose(window);
+        }
+    }
+
+    // The update loop for the engine.
+    void updateLoop(GLFWwindow* window, EngineConfig cfg, ECP& ecp, const Res& resources, const bool& running) {
+        Delta delta;
+        while (running) {
+            float dt = delta.since();
+            if (dt < 1.f / cfg.ups)
+                clibgame::delayThread(1.f / cfg.ups - dt);
+
+            ecp.updateEntities(dt);
+        }
+    }
+}
 
 // Starting the engine from an ECP derivative and a Res derivative.
 void clibgame::startEngine(EngineConfig cfg, ECP& ecp, const Res& resources) throw(std::runtime_error) {
@@ -52,8 +84,21 @@ void clibgame::startEngine(EngineConfig cfg, ECP& ecp, const Res& resources) thr
     glEnable(GL_DEPTH);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    throw std::runtime_error("NEED TO IMPLEMENT: Actually starting to implement things.");
+    // Starting the update threads.
+    bool running = true;
 
+    std::thread updateLoop(clibgame::updateLoop,
+                           window,
+                           cfg,
+                           std::ref(ecp),
+                           std::cref(resources),
+                           std::cref(running));
+
+    clibgame::renderLoop(window, cfg, ecp, resources, running);
+
+    updateLoop.join();
+
+    // Cleaning up.
     glfwTerminate();
 }
 
