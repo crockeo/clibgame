@@ -56,8 +56,6 @@ clibgame::Shader clibgame::Res::getShader(std::string name) const {
     return this->shaders.at(name);
 }
 
-#include <iostream>
-
 // Loading a set of resources from an std::istream.
 void clibgame::loadRes(Res& res, std::istream& stream) throw (std::runtime_error) {
     if (!stream.good() || stream.eof())
