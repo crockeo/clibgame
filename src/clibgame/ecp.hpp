@@ -13,6 +13,8 @@
 #include <map>
 #include <set>
 
+#include "res.hpp"
+
 //////////
 // Code //
 
@@ -51,10 +53,13 @@ namespace clibgame {
         // Getting the name of the component.
         virtual std::string getName() const = 0;
 
-        // Updating a component.
-        virtual void update(const ECP& ecp, float dt) { };
+        // Initializing this component.
+        virtual void init(const ECP&, const Res&) { };
 
-        // Rendering a component.a
+        // Updating a component.
+        virtual void update(const ECP&, float) { };
+
+        // Rendering a component.
         virtual void render() const { };
     };
 
@@ -89,6 +94,9 @@ namespace clibgame {
         // Removing a component from this entity.
         void removeComponent(Component*);
 
+        // Initializing the set of components in this Entity.
+        void initComponents(const ECP&, const Res&);
+
         // Updating the set of components.
         void updateComponents(const ECP&, float);
 
@@ -115,6 +123,9 @@ namespace clibgame {
 
         // Getting a reference to an entity.
         Entity& getEntity(std::string);
+
+        // Initializing the set of entities.
+        void initEntities(const Res&);
 
         // Updating the set of entities.
         void updateEntities(float);

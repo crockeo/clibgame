@@ -62,6 +62,12 @@ void clibgame::Entity::removeComponent(Component* component) {
         this->components.erase(pos);
 }
 
+// Initializing the set of components in this Entity.
+void clibgame::Entity::initComponents(const ECP& ecp, const Res& res) {
+    for (auto& pair: this->components)
+        std::get<1>(pair)->init(ecp, res);
+}
+
 // Updating the set of components.
 void clibgame::Entity::updateComponents(const clibgame::ECP& ecp, float dt) {
     for (auto& pair: this->components)
@@ -99,6 +105,12 @@ const clibgame::Entity& clibgame::ECP::getEntity(std::string uid) const {
 // Getting a reference to an entity.
 clibgame::Entity& clibgame::ECP::getEntity(std::string uid) {
     return this->entities.at(uid);
+}
+
+// Initializing the set of entities.
+void clibgame::ECP::initEntities(const Res& res) {
+    for (auto& pair: this->entities)
+        std::get<1>(pair).initComponents(*this, res);
 }
 
 // Updating the set of entities.
