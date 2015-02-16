@@ -51,8 +51,10 @@ std::string clibgame::Entity::getUID() const { return this->uid; }
 
 // Adding a component to this entity.
 void clibgame::Entity::addComponent(Component* component) {
-    if (component != nullptr && this->components.find(component->getName()) == this->components.end())
-        this->components[component->getName()] = std::unique_ptr<Component>(component);
+    if (component != nullptr && this->components.find(component->getName()) == this->components.end()) {
+       this->components[component->getName()] = std::unique_ptr<Component>(component);
+       this->components[component->getName()]->setOwner(this);
+    }
 }
 
 // Removing a component from this entity.
