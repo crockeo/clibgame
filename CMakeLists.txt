@@ -47,3 +47,6 @@ install(TARGETS clibgame
 install(DIRECTORY src/
         DESTINATION include
         FILES_MATCHING PATTERN *.hpp)
+
+install(FILES src/Findclibgame.cmake
+        DESTINATION "${CMAKE_ROOT}/Modules")
