@@ -96,6 +96,9 @@ namespace clibgame {
         // Removing a component from this entity.
         void removeComponent(Component*);
 
+        // Checking if this entity has a component.
+        bool hasComponent(std::string) const;
+
         // Getting a const ref to a component from this entity.
         const Component& getComponent(std::string) const throw(std::runtime_error);
 
@@ -126,11 +129,14 @@ namespace clibgame {
         // Adding a new entity.
         void addEntity(std::string);
 
+        // Checking if this ECP contains an entity by a given name.
+        bool hasEntity(std::string) const;
+
         // Getting a const reference to an entity.
-        const Entity& getEntity(std::string) const;
+        const Entity& getEntity(std::string) const throw(std::runtime_error);
 
         // Getting a reference to an entity.
-        Entity& getEntity(std::string);
+        Entity& getEntity(std::string) throw(std::runtime_error);
 
         // Initializing the set of entities.
         void initEntities(GLFWwindow*, const Res&);

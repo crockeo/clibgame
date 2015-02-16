@@ -63,6 +63,11 @@ void clibgame::Entity::removeComponent(Component* component) {
         this->components.erase(pos);
 }
 
+// Checking if this entity has a component.
+bool clibgame::Entity::hasComponent(std::string name) const {
+    return this->components.find(name) != this->components.end();
+}
+
 // Getting a const ref to a component from this entity.
 const clibgame::Component& clibgame::Entity::getComponent(std::string name) const throw(std::runtime_error) {
     if (this->components.find(name) == this->components.end())
@@ -112,13 +117,18 @@ void clibgame::ECP::addEntity(std::string uid) {
                            std::forward_as_tuple(uid));
 }
 
+// Checking if this ECP contains an entity by a given name.
+bool clibgame::ECP::hasEntity(std::string uid) const {
+    return this->entities.find(uid) != this->entities.end();
+}
+
 // Getting a const reference to an entity.
-const clibgame::Entity& clibgame::ECP::getEntity(std::string uid) const {
+const clibgame::Entity& clibgame::ECP::getEntity(std::string uid) const throw(std::runtime_error) {
     return this->entities.at(uid);
 }
 
 // Getting a reference to an entity.
-clibgame::Entity& clibgame::ECP::getEntity(std::string uid) {
+clibgame::Entity& clibgame::ECP::getEntity(std::string uid) throw(std::runtime_error) {
     return this->entities.at(uid);
 }
 
