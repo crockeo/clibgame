@@ -18,12 +18,13 @@ namespace clibgame {
             float dt = delta.since();
             if (dt < 1.f / cfg.rps)
                 clibgame::delayThread(1.f / cfg.rps - dt);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             ecp.renderEntities();
 
             glfwSwapBuffers(window);
             glfwPollEvents();
-            running = glfwWindowShouldClose(window);
+            running = !glfwWindowShouldClose(window);
         }
     }
 
@@ -40,8 +41,9 @@ namespace clibgame {
     }
 }
 
-// Starting the engine from an ECP derivative and a Res derivative.
-void clibgame::startEngine(EngineConfig cfg, ECP& ecp, const Res& resources) throw(std::runtime_error) {
+// Starting the engine from an ECP derivative and the location of a set of
+// resources.
+void clibgame::startEngine(EngineConfig cfg, ECP& ecp, std::string path) throw(std::runtime_error) {
     // Initializing GLFW.
     if (!glfwInit())
         throw std::runtime_error("Failed to initialize GLFW.");
@@ -56,6 +58,7 @@ void clibgame::startEngine(EngineConfig cfg, ECP& ecp, const Res& resources) thr
     // Setting window hints.
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     // Opening a window.
@@ -84,6 +87,15 @@ void clibgame::startEngine(EngineConfig cfg, ECP& ecp, const Res& resources) thr
     glEnable(GL_DEPTH);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    // Loading resources.
+    Res resources;
+
+    try {
+        clibgame::loadRes(resources, path);
+    } catch (std::runtime_error& e) {
+        throw e;
+    }
+
     // Starting the update threads.
     bool running = true;
 
@@ -100,18 +112,4 @@ void clibgame::startEngine(EngineConfig cfg, ECP& ecp, const Res& resources) thr
 
     // Cleaning up.
     glfwTerminate();
-}
-
-// Starting the engine from an ECP derivative and the location of a set of
-// resources.
-void clibgame::startEngine(EngineConfig cfg, ECP& ecp, std::string path) throw(std::runtime_error) {
-    Res resources;
-
-    try {
-        clibgame::loadRes(resources, path);
-    } catch (std::runtime_error& e) {
-        throw e;
-    }
-
-    clibgame::startEngine(cfg, ecp, resources);
 }
