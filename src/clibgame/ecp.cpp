@@ -63,6 +63,20 @@ void clibgame::Entity::removeComponent(Component* component) {
         this->components.erase(pos);
 }
 
+// Getting a const ref to a component from this entity.
+const clibgame::Component& clibgame::Entity::getComponent(std::string name) const throw(std::runtime_error) {
+    if (this->components.find(name) == this->components.end())
+        throw std::runtime_error("No such component exists in this Entity.");
+    return *this->components.at(name);
+}
+
+// Getting a ref to a component from the entity.
+clibgame::Component& clibgame::Entity::getComponent(std::string name) throw(std::runtime_error) {
+    if (this->components.find(name) == this->components.end())
+        throw std::runtime_error("No such component exists in this Entity.");
+    return *this->components[name];
+}
+
 // Initializing the set of components in this Entity.
 void clibgame::Entity::initComponents(GLFWwindow* window, const ECP& ecp, const Res& res) {
     for (auto& pair: this->components)

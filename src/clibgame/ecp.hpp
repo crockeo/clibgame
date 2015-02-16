@@ -96,6 +96,12 @@ namespace clibgame {
         // Removing a component from this entity.
         void removeComponent(Component*);
 
+        // Getting a const ref to a component from this entity.
+        const Component& getComponent(std::string) const throw(std::runtime_error);
+
+        // Getting a ref to a component from the entity.
+        Component& getComponent(std::string) throw(std::runtime_error);
+
         // Initializing the set of components in this Entity.
         void initComponents(GLFWwindow*, const ECP&, const Res&);
 
