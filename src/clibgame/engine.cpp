@@ -96,6 +96,8 @@ void clibgame::startEngine(EngineConfig cfg, ECP& ecp, std::string path) throw(s
         throw e;
     }
 
+    ecp.initEntities(resources);
+
     // Starting the update threads.
     bool running = true;
 
