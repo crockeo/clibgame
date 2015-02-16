@@ -64,15 +64,15 @@ void clibgame::Entity::removeComponent(Component* component) {
 }
 
 // Initializing the set of components in this Entity.
-void clibgame::Entity::initComponents(const ECP& ecp, const Res& res) {
+void clibgame::Entity::initComponents(GLFWwindow* window, const ECP& ecp, const Res& res) {
     for (auto& pair: this->components)
-        std::get<1>(pair)->init(ecp, res);
+        std::get<1>(pair)->init(window, ecp, res);
 }
 
 // Updating the set of components.
-void clibgame::Entity::updateComponents(const clibgame::ECP& ecp, float dt) {
+void clibgame::Entity::updateComponents(GLFWwindow* window, const clibgame::ECP& ecp, float dt) {
     for (auto& pair: this->components)
-        std::get<1>(pair)->update(ecp, dt);
+        std::get<1>(pair)->update(window, ecp, dt);
 }
 
 // Rendering the set of components.
@@ -109,15 +109,15 @@ clibgame::Entity& clibgame::ECP::getEntity(std::string uid) {
 }
 
 // Initializing the set of entities.
-void clibgame::ECP::initEntities(const Res& res) {
+void clibgame::ECP::initEntities(GLFWwindow* window, const Res& res) {
     for (auto& pair: this->entities)
-        std::get<1>(pair).initComponents(*this, res);
+        std::get<1>(pair).initComponents(window, *this, res);
 }
 
 // Updating the set of entities.
-void clibgame::ECP::updateEntities(float dt) {
+void clibgame::ECP::updateEntities(GLFWwindow* window, float dt) {
     for (auto& pair: this->entities)
-        std::get<1>(pair).updateComponents(*this, dt);
+        std::get<1>(pair).updateComponents(window, *this, dt);
 }
 
 // Rendering the set of entities.

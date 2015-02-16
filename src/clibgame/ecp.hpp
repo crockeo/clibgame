@@ -8,6 +8,8 @@
 
 //////////////
 // Includes //
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 #include <memory>
 #include <string>
 #include <map>
@@ -54,10 +56,10 @@ namespace clibgame {
         virtual std::string getName() const = 0;
 
         // Initializing this component.
-        virtual void init(const ECP&, const Res&) { };
+        virtual void init(GLFWwindow*, const ECP&, const Res&) { };
 
         // Updating a component.
-        virtual void update(const ECP&, float) { };
+        virtual void update(GLFWwindow*, const ECP&, float) { };
 
         // Rendering a component.
         virtual void render() const { };
@@ -95,10 +97,10 @@ namespace clibgame {
         void removeComponent(Component*);
 
         // Initializing the set of components in this Entity.
-        void initComponents(const ECP&, const Res&);
+        void initComponents(GLFWwindow*, const ECP&, const Res&);
 
         // Updating the set of components.
-        void updateComponents(const ECP&, float);
+        void updateComponents(GLFWwindow*, const ECP&, float);
 
         // Rendering the set of components.
         void renderComponents() const;
@@ -125,10 +127,10 @@ namespace clibgame {
         Entity& getEntity(std::string);
 
         // Initializing the set of entities.
-        void initEntities(const Res&);
+        void initEntities(GLFWwindow*, const Res&);
 
         // Updating the set of entities.
-        void updateEntities(float);
+        void updateEntities(GLFWwindow*, float);
 
         // Rendering the set of entities.
         void renderEntities() const;

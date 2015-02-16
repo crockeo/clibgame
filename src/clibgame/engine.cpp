@@ -36,7 +36,7 @@ namespace clibgame {
             if (dt < 1.f / cfg.ups)
                 clibgame::delayThread(1.f / cfg.ups - dt);
 
-            ecp.updateEntities(dt);
+            ecp.updateEntities(window, dt);
         }
     }
 }
@@ -96,7 +96,7 @@ void clibgame::startEngine(EngineConfig cfg, ECP& ecp, std::string path) throw(s
         throw e;
     }
 
-    ecp.initEntities(resources);
+    ecp.initEntities(window, resources);
 
     // Starting the update threads.
     bool running = true;
