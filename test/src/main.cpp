@@ -7,20 +7,21 @@
 #include <iostream>
 
 #include "rendering.hpp"
+#include "game.hpp"
 
 //////////
 // Code //
 
-#define NEW false
+#define NEW true
 #define UPDATES_PER_SECOND 120
 
 // The entry point.
 int main(int argc, char** argv) {
     if (NEW) {
         clibgame::EngineConfig cfg;
-        clibgame::ECP defaultECP;
+        Game game;
 
-        clibgame::startEngine(cfg, defaultECP, "res/assetspec.txt");
+        clibgame::startEngine(cfg, game, "res/assetspec.txt");
 
         return 0;
     } else {

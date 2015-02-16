@@ -10,6 +10,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
 # Building the executable.
 set(SOURCES src/rendering.cpp
+            src/game.cpp
             src/main.cpp)
 
 add_executable(clibgame-test ${SOURCES})

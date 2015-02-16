@@ -1,1 +1,2 @@
+texture res/test.png
 shader res/test
