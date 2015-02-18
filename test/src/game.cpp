@@ -52,26 +52,44 @@ struct Position : public clibgame::Component {
 };
 
 struct PlayerController : public clibgame::Component {
-    float speed;
+    float speed, dx, dy;
 
     PlayerController(float speed) {
         this->speed = speed;
+        this->dx = 0;
+        this->dy = 0;
     }
 
     std::string getName() const { return "playerController"; }
 
     void update(GLFWwindow* window, const clibgame::ECP& ecp, float dt) {
-        float dx = 0,
-              dy = 0;
+        bool my = false,
+             mx = false;
 
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-            dy += speed;
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-            dy -= speed;
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-            dx -= speed;
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-            dx += speed;
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+            this->dy += speed * dt;
+            my = true;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+            this->dy -= speed * dt;
+            my = true;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+            this->dx -= speed * dt;
+            mx = true;
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+            this->dx += speed * dt;
+            mx = true;
+        }
+
+        if (!my)
+            this->dy -= this->dy * dt;
+        if (!mx)
+            this->dx -= this->dx * dt;
 
         if (dx != 0 || dy != 0) {
             Position& p = dynamic_cast<Position&>(this->getOwner().getComponent("position"));
@@ -187,6 +205,6 @@ struct PlayerRender : public clibgame::Component,
 Game::Game() {
     this->addEntity("player");
     this->getEntity("player").addComponent(new Position(0, 0, 0.1, 0.1, true));
-    this->getEntity("player").addComponent(new PlayerController(0.5));
+    this->getEntity("player").addComponent(new PlayerController(1));
     this->getEntity("player").addComponent(new PlayerRender());
 }
