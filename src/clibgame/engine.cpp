@@ -11,32 +11,32 @@
 // Code //
 
 namespace clibgame {
-    // The render loop for the engine.
-    void renderLoop(GLFWwindow* window, EngineConfig cfg, const ECP& ecp, const Res& resources, bool& running) {
-        Delta delta;
-        while (running) {
-            float dt = delta.since();
-            if (dt < 1.f / cfg.rps)
-                clibgame::delayThread(1.f / cfg.rps - dt);
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // The primary engine loop.
+    void engineLoop(GLFWwindow* window, EngineConfig cfg, ECP& ecp, const Res& resources) {
+        const int dps = cfg.ups >= cfg.rps ? cfg.ups : cfg.rps;
+        Delta rDelta, uDelta;
+        float rTime = 0.f,
+              uTime = 0.f;
 
-            ecp.renderEntities();
+        while (!glfwWindowShouldClose(window)) {
+            if (uTime > 1.f / cfg.ups) {
+                ecp.updateEntities(window, uTime);
+                uTime = 0.f;
+            }
 
-            glfwSwapBuffers(window);
+            if (rTime > 1.f / cfg.rps) {
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                ecp.renderEntities();
+                glfwSwapBuffers(window);
+
+                rTime = 0.f;
+            }
+
+            rTime += rDelta.since();
+            uTime += uDelta.since();
+
+            clibgame::delayThread(1.f / dps);
             glfwPollEvents();
-            running = !glfwWindowShouldClose(window);
-        }
-    }
-
-    // The update loop for the engine.
-    void updateLoop(GLFWwindow* window, EngineConfig cfg, ECP& ecp, const Res& resources, const bool& running) {
-        Delta delta;
-        while (running) {
-            float dt = delta.since();
-            if (dt < 1.f / cfg.ups)
-                clibgame::delayThread(1.f / cfg.ups - dt);
-
-            ecp.updateEntities(window, dt);
         }
     }
 }
@@ -99,18 +99,7 @@ void clibgame::startEngine(EngineConfig cfg, ECP& ecp, std::string path) throw(s
     ecp.initEntities(window, resources);
 
     // Starting the update threads.
-    bool running = true;
-
-    std::thread updateLoop(clibgame::updateLoop,
-                           window,
-                           cfg,
-                           std::ref(ecp),
-                           std::cref(resources),
-                           std::cref(running));
-
-    clibgame::renderLoop(window, cfg, ecp, resources, running);
-
-    updateLoop.join();
+    clibgame::engineLoop(window, cfg, ecp, resources);
 
     // Cleaning up.
     glfwTerminate();
