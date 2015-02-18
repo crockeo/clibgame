@@ -13,18 +13,22 @@
 namespace clibgame {
     // The primary engine loop.
     void engineLoop(GLFWwindow* window, EngineConfig cfg, ECP& ecp, const Res& resources) {
-        const int dps = cfg.ups >= cfg.rps ? cfg.ups : cfg.rps;
-        Delta rDelta, uDelta;
-        float rTime = 0.f,
+        const float delay = 1.f / (cfg.ups >= cfg.rps ? cfg.ups : cfg.rps),
+                    rCap  = 1.f / cfg.rps,
+                    uCap  = 1.f / cfg.ups;
+
+        Delta delta;
+        float dt    = 0.f,
+              rTime = 0.f,
               uTime = 0.f;
 
         while (!glfwWindowShouldClose(window)) {
-            if (uTime > 1.f / cfg.ups) {
+            if (uTime > uCap) {
                 ecp.updateEntities(window, uTime);
                 uTime = 0.f;
             }
 
-            if (rTime > 1.f / cfg.rps) {
+            if (rTime > rCap) {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                 ecp.renderEntities();
                 glfwSwapBuffers(window);
@@ -32,10 +36,13 @@ namespace clibgame {
                 rTime = 0.f;
             }
 
-            rTime += rDelta.since();
-            uTime += uDelta.since();
+            dt = delta.since();
+            rTime += dt;
+            uTime += dt;
 
-            clibgame::delayThread(1.f / dps);
+            if (dt < delay)
+                clibgame::delayThread(delay - dt);
+
             glfwPollEvents();
         }
     }
