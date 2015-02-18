@@ -75,7 +75,7 @@ struct PlayerController : public clibgame::Component {
 
         if (dx != 0 || dy != 0) {
             Position& p = dynamic_cast<Position&>(this->getOwner().getComponent("position"));
-            p.translate(dx, dy);
+            p.translate(dx * dt, dy * dt);
         }
     }
 };
@@ -84,10 +84,7 @@ struct PlayerRender : public clibgame::Component,
                       public clibgame::Listener {
     clibgame::Texture* texture;
     clibgame::Shader* shader;
-    GLuint vao, ebo;
-
-    GLuint vbo1, vbo2;
-    bool mode;
+    GLuint vao, vbo, ebo;
 
     std::vector<GLfloat> generateCoords(float x, float y,
                                         float w, float h) {
@@ -108,9 +105,8 @@ struct PlayerRender : public clibgame::Component,
         for (int i = 0; i < vVertices.size(); i++)
             aVertices[i] = vVertices.at(i);
 
-        glBindBuffer(GL_ARRAY_BUFFER, this->mode ? vbo1 : vbo2);
+        glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
         glBufferData(GL_ARRAY_BUFFER, sizeof(aVertices), aVertices, GL_DYNAMIC_DRAW);
-        mode = !mode;
     }
 
     PlayerRender() {
@@ -119,8 +115,7 @@ struct PlayerRender : public clibgame::Component,
         texture = nullptr;
         shader  = nullptr;
         vao     = 0;
-        vbo1    = 0;
-        vbo2    = 0;
+        vbo     = 0;
         ebo     = 0;
     }
 
@@ -131,8 +126,7 @@ struct PlayerRender : public clibgame::Component,
             delete shader;
 
         glDeleteVertexArrays(1, &this->vao);
-        glDeleteBuffers(1, &this->vbo1);
-        glDeleteBuffers(1, &this->vbo2);
+        glDeleteBuffers(1, &this->vbo);
         glDeleteBuffers(1, &this->ebo);
     }
 
@@ -145,9 +139,7 @@ struct PlayerRender : public clibgame::Component,
         glGenVertexArrays(1, &this->vao);
         glBindVertexArray(this->vao);
 
-        glGenBuffers(1, &this->vbo1);
-        glGenBuffers(1, &this->vbo2);
-        this->updateVertices(0, 0, 0.1, 0.1);
+        glGenBuffers(1, &this->vbo);
         this->updateVertices(0, 0, 0.1, 0.1);
 
         glGenBuffers(1, &this->ebo);
@@ -163,7 +155,7 @@ struct PlayerRender : public clibgame::Component,
 
     void render() const {
         glBindVertexArray(this->vao);
-        glBindBuffer(GL_ARRAY_BUFFER, this->mode ? vbo2 : vbo1);
+        glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
 
         glUseProgram(this->shader->getShaderID());
@@ -185,8 +177,8 @@ struct PlayerRender : public clibgame::Component,
     void alert(const clibgame::Event&& e) {
         if (e.getEventType() == "position") {
             const PositionEvent&& pe = dynamic_cast<const PositionEvent&&>(e);
-            //this->updateVertices(pe.x, pe.y,
-                                 //pe.w, pe.h);
+            this->updateVertices(pe.x, pe.y,
+                                 pe.w, pe.h);
         }
     }
 };
