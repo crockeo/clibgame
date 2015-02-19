@@ -15,6 +15,7 @@ set(SOURCES
   src/clibgame/engineconfig.cpp
   src/clibgame/res/texture.cpp
   src/clibgame/res/shader.cpp
+  src/clibgame/res/font.cpp
   src/clibgame/eventing.cpp
   src/clibgame/engine.cpp
   src/clibgame/delta.cpp
@@ -27,15 +28,18 @@ set(SOURCES
 add_library(clibgame STATIC ${SOURCES})
 
 # Finding and setting up some packages.
+find_package(freetype REQUIRED)
 find_package(glew REQUIRED)
 find_package(glfw REQUIRED)
 find_package(png REQUIRED)
 
-include_directories(${GLEW_INCLUDE_DIRS}
+include_directories(${FREETYPE_INCLUDE_DIRS}
+                    ${GLEW_INCLUDE_DIRS}
                     ${GLFW_INCLUDE_DIRS}
                     ${PNG_INCLUDE_DIRS})
 
-target_link_libraries(clibgame ${GLEW_LIBRARY}
+target_link_libraries(clibgame ${FREETYPE_LIBRARIES}
+                               ${GLEW_LIBRARY}
                                ${GLFW_LIBRARY}
                                ${PNG_LIBRARY})
 
