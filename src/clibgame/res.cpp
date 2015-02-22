@@ -11,35 +11,35 @@
 clibgame::Res::Res() { }
 
 // Adding a set of resources.
-void clibgame::Res::addAnimation(std::string path, int cols, int rows, float frameLength, bool loops) {
+void clibgame::Res::addAnimation(std::string path, int cols, int rows, float frameLength, bool loops) throw(std::runtime_error) {
     this->animations.emplace(std::piecewise_construct,
                              std::forward_as_tuple(path),
                              std::forward_as_tuple(path, cols, rows, frameLength, loops));
 }
 
-void clibgame::Res::addAnimation(std::string path, int cols, int rows, float frameLength) {
+void clibgame::Res::addAnimation(std::string path, int cols, int rows, float frameLength) throw(std::runtime_error) {
     this->addAnimation(path, cols, rows, frameLength, true);
 }
 
-void clibgame::Res::addTexSheet(std::string path, int cols, int rows) {
+void clibgame::Res::addTexSheet(std::string path, int cols, int rows) throw(std::runtime_error) {
     this->texSheets.emplace(std::piecewise_construct,
                             std::forward_as_tuple(path),
                             std::forward_as_tuple(path, cols, rows));
 }
 
-void clibgame::Res::addTexture(std::string path) {
+void clibgame::Res::addTexture(std::string path) throw(std::runtime_error) {
     this->textures.emplace(std::piecewise_construct,
                            std::forward_as_tuple(path),
                            std::forward_as_tuple(path));
 }
 
-void clibgame::Res::addShader(std::string path) { 
+void clibgame::Res::addShader(std::string path) throw(std::runtime_error) {
     this->shaders.emplace(std::piecewise_construct,
                           std::forward_as_tuple(path),
                           std::forward_as_tuple(path));
 }
 
-void clibgame::Res::addFont(std::string path, int pnt) {
+void clibgame::Res::addFont(std::string path, int pnt) throw(std::runtime_error) {
     this->fonts.emplace(std::piecewise_construct,
                         std::forward_as_tuple(path),
                         std::forward_as_tuple(path, pnt));

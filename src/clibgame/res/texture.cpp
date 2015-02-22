@@ -165,8 +165,11 @@ std::tuple<GLuint, int, int> loadPNG(std::string path) {
 }
 
 // Loading a texture from the disk.
-clibgame::Texture::Texture(std::string path) {
+clibgame::Texture::Texture(std::string path) throw(std::runtime_error) {
     auto png = loadPNG(path);
+
+    if (png == BAD_RETURN)
+        throw std::runtime_error("Failed to load PNG from '" + path + "'!");
 
     this->width    = std::get<1>(png);
     this->height   = std::get<2>(png);

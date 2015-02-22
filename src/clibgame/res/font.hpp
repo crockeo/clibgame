@@ -33,7 +33,7 @@ namespace clibgame {
 
     public:
         // Loading a font from a location on disk.
-        Font(std::string, int);
+        Font(std::string, int) throw(std::runtime_error);
 
         // Copy constructor.
         Font(const Font&);

@@ -5,7 +5,7 @@
 
 // Constructing a TexSheet from a given image with a given number of
 // columns and rows.
-clibgame::TexSheet::TexSheet(std::string path, int cols, int rows)
+clibgame::TexSheet::TexSheet(std::string path, int cols, int rows) throw(std::runtime_error)
         : texture(path) {
     this->cols = cols;
     this->rows = rows;

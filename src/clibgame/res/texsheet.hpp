@@ -25,7 +25,7 @@ namespace clibgame {
     public:
         // Constructing a TexSheet from a given image with a given number of
         // columns and rows.
-        TexSheet(std::string, int, int);
+        TexSheet(std::string, int, int) throw(std::runtime_error);
 
         // Setting the position of the TexSheet.
         void setPosition(int, int);

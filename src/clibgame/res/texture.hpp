@@ -31,7 +31,7 @@ namespace clibgame {
 
     public:
         // Loading a texture from the disk.
-        Texture(std::string);
+        Texture(std::string) throw(std::runtime_error);
 
         // Copy constructor.
         Texture(const Texture&);

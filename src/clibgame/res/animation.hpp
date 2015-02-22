@@ -32,17 +32,10 @@ namespace clibgame {
     public:
         // Loading an Animation from the file system with an option of whether
         // or not it should loop.
-        Animation(std::string, int, int, float, bool);
+        Animation(std::string, int, int, float, bool) throw(std::runtime_error);
 
         // Loading an animation from the file system that will always loop.
-        Animation(std::string, int, int, float);
-
-        // Creating an animation from a texture sheet with an option of whether
-        // or not it shoud loop.
-        Animation(clibgame::TexSheet, float, bool);
-
-        // Creating an animation from a texture sheet that will always loop.
-        Animation(clibgame::TexSheet, float);
+        Animation(std::string, int, int, float) throw(std::runtime_error);
 
         // Getting the ID of the animation.
         GLuint getTextureID() const;

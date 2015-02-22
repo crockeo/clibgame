@@ -16,7 +16,7 @@ std::tuple<int, int> clibgame::Animation::getCurrentFrame() const {
 
 // Loading an Animation from the file system with an option of whether
 // or not it should loop.
-clibgame::Animation::Animation(std::string path, int cols, int rows, float frameLength, bool loop) :
+clibgame::Animation::Animation(std::string path, int cols, int rows, float frameLength, bool loop) throw(std::runtime_error) :
         texSheet(path, cols, rows) {
     this->frameLength = frameLength;
     this->loop = loop;
@@ -24,21 +24,8 @@ clibgame::Animation::Animation(std::string path, int cols, int rows, float frame
 }
 
 // Loading an animation from the file system that will always loop.
-clibgame::Animation::Animation(std::string path, int cols, int rows, float frameLength) :
+clibgame::Animation::Animation(std::string path, int cols, int rows, float frameLength) throw(std::runtime_error) :
         clibgame::Animation(path, cols, rows, frameLength, true) { }
-
-// Creating an animation from a texture sheet with an option of whether
-// or not it shoud loop.
-clibgame::Animation::Animation(clibgame::TexSheet texSheet, float frameLength, bool loop) :
-        texSheet(texSheet) {
-    this->frameLength = frameLength;
-    this->loop = loop;
-    this->timer = Timer(loop ? -1 : frameLength * texSheet.getColumns() * texSheet.getRows());
-}
-
-// Creating an animation from a texture sheet that will always loop.
-clibgame::Animation::Animation(clibgame::TexSheet texSheet, float frameLength) :
-        clibgame::Animation(texSheet, frameLength, true) { }
 
 // Getting the ID of the animation.
 GLuint clibgame::Animation::getTextureID() const {

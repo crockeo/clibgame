@@ -21,13 +21,11 @@ FT_Library clibgame::FontLib::instance() {
     return *clibgame::FontLib::ft;
 }
 
-clibgame::Font::Font(std::string path, int pnt) {
+clibgame::Font::Font(std::string path, int pnt) throw(std::runtime_error) {
     this->fontFace = nullptr;
 
-    if (FT_New_Face(FontLib::instance(), path.c_str(), 0, &this->fontFace)) {
-        std::cerr << "Failed to load font from '" << path << "'!" << std::endl;
-        return;
-    }
+    if (FT_New_Face(FontLib::instance(), path.c_str(), 0, &this->fontFace))
+        throw std::runtime_error("Failed to load font from '" + path + "'!");
 
     FT_Set_Pixel_Sizes(this->fontFace, 0, pnt);
     this->original = true;
