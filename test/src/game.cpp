@@ -1,7 +1,5 @@
 #include "game.hpp"
 
-#include <iostream>
-
 //////////
 // Code //
 
@@ -324,10 +322,6 @@ struct TextRender : public clibgame::Component {
         }
 
         glDeleteTextures(1, &tex);
-
-        GLenum err = glGetError();
-        if (err != GL_NO_ERROR)
-            std::cout << static_cast<int>(err) << std::endl;
     }
 };
 
@@ -335,7 +329,7 @@ struct TextRender : public clibgame::Component {
 Game::Game() {
     this->addEntity("player");
     this->getEntity("player").addComponent(new Position(0, 0, 0.1, 0.1, true));
-    this->getEntity("player").addComponent(new PlayerController(1));
+    this->getEntity("player").addComponent(new PlayerController(4));
     this->getEntity("player").addComponent(new PlayerRender());
 
     this->addEntity("sometext");
