@@ -17,6 +17,7 @@
 #include "res/texsheet.hpp"
 #include "res/texture.hpp"
 #include "res/shader.hpp"
+#include "res/font.hpp"
 
 //////////
 // Code //
@@ -29,6 +30,7 @@ namespace clibgame {
         std::unordered_map<std::string, clibgame::TexSheet> texSheets;
         std::unordered_map<std::string, clibgame::Texture> textures;
         std::unordered_map<std::string, clibgame::Shader> shaders;
+        std::unordered_map<std::string, clibgame::Font> fonts;
 
     public:
         // Creating an empty Res.
@@ -46,12 +48,14 @@ namespace clibgame {
         void addTexSheet(std::string, int, int);
         void addTexture(std::string);
         void addShader(std::string);
+        void addFont(std::string, int);
 
         // Getting a set of resources.
         Animation getAnimation(std::string) const;
         TexSheet getTexSheet(std::string) const;
         Texture getTexture(std::string) const;
         Shader getShader(std::string) const;
+        Font getFont(std::string) const;
     };
 
     // Loading a set of resources from an std::istream.

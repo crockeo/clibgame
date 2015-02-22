@@ -29,12 +29,33 @@ namespace clibgame {
     private:
         FT_Face fontFace;
         bool original;
-        GLuint ebo;
         int pnt;
-        int len;
 
     public:
-        // TODO: Actually do some font loading.
+        // Loading a font from a location on disk.
+        Font(std::string, int);
+
+        // Copy constructor.
+        Font(const Font&);
+
+        // Destroying this font.
+        ~Font();
+
+        // Deleting the assignment operator.
+        Font& operator=(const Font&) = delete;
+
+        // Determining the display width of a string.
+        float displayWidth(std::string) const;
+
+        // Determining the display height of a string.
+        float displayHeight(std::string) const;
+
+        // Getting the FT_Face of this font.
+        FT_Face getFontFace() const;
+
+        // Getting the height of this font - it will always be the same as
+        // displayWidth; only an 'int' instead of a 'float'.
+        int getPnt() const;
     };
 }
 

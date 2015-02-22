@@ -39,6 +39,12 @@ void clibgame::Res::addShader(std::string path) {
                           std::forward_as_tuple(path));
 }
 
+void clibgame::Res::addFont(std::string path, int pnt) {
+    this->fonts.emplace(std::piecewise_construct,
+                        std::forward_as_tuple(path),
+                        std::forward_as_tuple(path, pnt));
+}
+
 // Getting a set of resources.
 clibgame::Animation clibgame::Res::getAnimation(std::string name) const {
     return this->animations.at(name);
@@ -54,6 +60,10 @@ clibgame::Texture clibgame::Res::getTexture(std::string name) const {
 
 clibgame::Shader clibgame::Res::getShader(std::string name) const {
     return this->shaders.at(name);
+}
+
+clibgame::Font clibgame::Res::getFont(std::string name) const {
+    return this->fonts.at(name);
 }
 
 // Loading a set of resources from an std::istream.
@@ -85,6 +95,11 @@ void clibgame::loadRes(Res& res, std::istream& stream) throw (std::runtime_error
             res.addTexture(path);
         } else if (prefix.compare("shader") == 0) {
             res.addShader(path);
+        } else if (prefix.compare("font") == 0) {
+            int pnt;
+            stream >> pnt;
+
+            res.addFont(path, pnt);
         }
     }
 }
