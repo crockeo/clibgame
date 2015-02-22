@@ -21,7 +21,12 @@ int main(int argc, char** argv) {
         clibgame::EngineConfig cfg;
         Game game;
 
-        clibgame::startEngine(cfg, game, "res/assetspec.txt");
+        try {
+            clibgame::startEngine(cfg, game, "res/assetspec.txt");
+        } catch (std::runtime_error& e) {
+            std::cout << e.what() << std::endl;
+            return 1;
+        }
 
         return 0;
     } else {

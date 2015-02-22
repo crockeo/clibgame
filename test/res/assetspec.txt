@@ -1,2 +1,3 @@
 texture res/test.png
 shader res/test
+font res/testfont.ttf 24
