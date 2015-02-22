@@ -9,8 +9,7 @@ SET(   LIBRARY_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/build/lib")
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
 # Building the executable.
-set(SOURCES src/rendering.cpp
-            src/game.cpp
+set(SOURCES src/game.cpp
             src/main.cpp)
 
 add_executable(clibgame-test ${SOURCES})

@@ -1,5 +1,7 @@
 #include "game.hpp"
 
+#include <iostream>
+
 //////////
 // Code //
 
@@ -201,10 +203,141 @@ struct PlayerRender : public clibgame::Component,
     }
 };
 
+// A component to perform text rendering.
+struct TextRender : public clibgame::Component {
+    std::unique_ptr<clibgame::Shader> shader;
+    std::unique_ptr<clibgame::Font> font;
+
+    std::string fontName;
+    GLFWwindow* window;
+    std::string str;
+    float x, y;
+    GLuint ebo;
+    GLuint vbo;
+
+    // Constructing a new text render.
+    TextRender(std::string fontName, std::string str, float x, float y) {
+        this->font = nullptr;
+        this->fontName = fontName;
+        this->str = str;
+        this->x = x;
+        this->y = y;
+        this->vbo = 0;
+        this->ebo = 0;
+    }
+
+    // Deleting a text render.
+    ~TextRender() {
+        if (vbo != 0)
+            glDeleteBuffers(1, &this->vbo);
+        if (ebo != 0)
+            glDeleteBuffers(1, &this->ebo);
+    }
+
+    std::string getName() const { return "textRender"; }
+
+    void init(GLFWwindow* window, const clibgame::ECP& ecp, const clibgame::Res& res) {
+        shader = std::unique_ptr<clibgame::Shader>(new clibgame::Shader(res.getShader("res/fontshader")));
+        font   = std::unique_ptr<clibgame::Font>(new clibgame::Font(res.getFont(this->fontName)));
+
+        this->window = window;
+
+        glGenBuffers(1, &this->vbo);
+        glGenBuffers(1, &this->ebo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
+        GLuint order[] = { 0, 1, 2, 2, 3, 0 };
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(order), order, GL_STATIC_DRAW);
+    }
+
+    void render() const {
+        FT_Face fontFace = this->font->getFontFace();
+
+        glUseProgram(this->shader->getShaderID());
+
+        // Getting the window size.
+        int width, height;
+        glfwGetWindowSize(window, &width, &height);
+        glUniform2f(glGetUniformLocation(this->shader->getShaderID(), "in_size"), width, height);
+
+        // Setting the text color.
+        glUniform4f(glGetUniformLocation(this->shader->getShaderID(), "in_color"), 1, 1, 1, 1);
+
+        // Loading up the texture.
+        GLuint tex;
+        glGenTextures(1, &tex);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glUniform1i(glGetUniformLocation(this->shader->getShaderID(), "in_tex"), 0);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+        // Loading up the VBO.
+        glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
+
+        // Loading up the EBO.
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
+
+        // Setting the vertex coordinate.
+        GLint posAttrib = glGetAttribLocation(this->shader->getShaderID(), "in_coordinates");
+        glEnableVertexAttribArray(posAttrib);
+        glVertexAttribPointer(posAttrib, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+
+        float tx = this->x,
+              ty = this->y;
+
+        FT_GlyphSlot g = fontFace->glyph;
+        for (const char* ptr = str.c_str(); *ptr; ptr++) {
+            if (FT_Load_Char(fontFace, *ptr, FT_LOAD_RENDER))
+                continue;
+
+            glTexImage2D(
+                GL_TEXTURE_2D,
+                0,
+                GL_RED,
+                g->bitmap.width,
+                g->bitmap.rows,
+                0,
+                GL_RED,
+                GL_UNSIGNED_BYTE,
+                g->bitmap.buffer
+            );
+
+            float w = g->bitmap.width,
+                  h = g->bitmap.rows;
+
+            GLfloat box[] = {
+                tx    , ty    , 0, 1,
+                tx + w, ty    , 1, 1,
+                tx + w, ty + h, 1, 0,
+                tx    , ty + h, 0, 0
+            };
+
+            glBufferData(GL_ARRAY_BUFFER, sizeof(box), box, GL_DYNAMIC_DRAW);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+            tx += g->advance.x >> 6;
+            ty += g->advance.y >> 6;
+        }
+
+        glDeleteTextures(1, &tex);
+
+        GLenum err = glGetError();
+        if (err != GL_NO_ERROR)
+            std::cout << static_cast<int>(err) << std::endl;
+    }
+};
+
 // Creating a new game.
 Game::Game() {
     this->addEntity("player");
     this->getEntity("player").addComponent(new Position(0, 0, 0.1, 0.1, true));
     this->getEntity("player").addComponent(new PlayerController(1));
     this->getEntity("player").addComponent(new PlayerRender());
+
+    this->addEntity("sometext");
+    this->getEntity("sometext").addComponent(new TextRender("res/testfont.ttf", "Testing!", 10, 10));
 }
