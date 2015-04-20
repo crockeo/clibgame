@@ -21,7 +21,7 @@
 // Code //
 
 namespace clibgame {
-    struct Component;
+    class Component;
     class Entity;
     class ECP;
 
