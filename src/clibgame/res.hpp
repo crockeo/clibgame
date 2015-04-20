@@ -43,13 +43,13 @@ namespace clibgame {
         Res& operator=(const Res&) = delete;
 
         // Adding a set of resources.
-        void addAnimation(std::string, int, int, float, bool, int, int) throw(std::runtime_error);
-        void addAnimation(std::string, int, int, float, bool) throw(std::runtime_error);
-        void addAnimation(std::string, int, int, float) throw(std::runtime_error);
-        void addTexSheet(std::string, int, int) throw(std::runtime_error);
-        void addTexture(std::string) throw(std::runtime_error);
-        void addShader(std::string) throw(std::runtime_error);
-        void addFont(std::string, int) throw(std::runtime_error);
+        void addAnimation(std::string, std::string, int, int, float, bool, int, int) throw(std::runtime_error);
+        void addAnimation(std::string, std::string, int, int, float, bool) throw(std::runtime_error);
+        void addAnimation(std::string, std::string, int, int, float) throw(std::runtime_error);
+        void addTexSheet(std::string, std::string, int, int) throw(std::runtime_error);
+        void addTexture(std::string, std::string) throw(std::runtime_error);
+        void addShader(std::string, std::string) throw(std::runtime_error);
+        void addFont(std::string, std::string, int) throw(std::runtime_error);
 
         // Getting a set of resources.
         Animation getAnimation(std::string) const;

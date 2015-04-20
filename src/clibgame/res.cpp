@@ -11,44 +11,44 @@
 clibgame::Res::Res() { }
 
 // Adding a set of resources.
-void clibgame::Res::addAnimation(std::string path, int cols, int rows, float frameLength, bool loops, int beginFrame, int endFrame) throw(std::runtime_error) {
+void clibgame::Res::addAnimation(std::string name, std::string path, int cols, int rows, float frameLength, bool loops, int beginFrame, int endFrame) throw(std::runtime_error) {
     this->animations.emplace(std::piecewise_construct,
-                             std::forward_as_tuple(path),
+                             std::forward_as_tuple(name),
                              std::forward_as_tuple(path, cols, rows, frameLength, loops, beginFrame, endFrame));
 }
 
 // Adding a set of resources.
-void clibgame::Res::addAnimation(std::string path, int cols, int rows, float frameLength, bool loops) throw(std::runtime_error) {
+void clibgame::Res::addAnimation(std::string name, std::string path, int cols, int rows, float frameLength, bool loops) throw(std::runtime_error) {
     this->animations.emplace(std::piecewise_construct,
-                             std::forward_as_tuple(path),
+                             std::forward_as_tuple(name),
                              std::forward_as_tuple(path, cols, rows, frameLength, loops));
 }
 
-void clibgame::Res::addAnimation(std::string path, int cols, int rows, float frameLength) throw(std::runtime_error) {
-    this->addAnimation(path, cols, rows, frameLength, true);
+void clibgame::Res::addAnimation(std::string name, std::string path, int cols, int rows, float frameLength) throw(std::runtime_error) {
+    this->addAnimation(name, path, cols, rows, frameLength, true);
 }
 
-void clibgame::Res::addTexSheet(std::string path, int cols, int rows) throw(std::runtime_error) {
+void clibgame::Res::addTexSheet(std::string name, std::string path, int cols, int rows) throw(std::runtime_error) {
     this->texSheets.emplace(std::piecewise_construct,
-                            std::forward_as_tuple(path),
+                            std::forward_as_tuple(name),
                             std::forward_as_tuple(path, cols, rows));
 }
 
-void clibgame::Res::addTexture(std::string path) throw(std::runtime_error) {
+void clibgame::Res::addTexture(std::string name, std::string path) throw(std::runtime_error) {
     this->textures.emplace(std::piecewise_construct,
-                           std::forward_as_tuple(path),
+                           std::forward_as_tuple(name),
                            std::forward_as_tuple(path));
 }
 
-void clibgame::Res::addShader(std::string path) throw(std::runtime_error) {
+void clibgame::Res::addShader(std::string name, std::string path) throw(std::runtime_error) {
     this->shaders.emplace(std::piecewise_construct,
-                          std::forward_as_tuple(path),
+                          std::forward_as_tuple(name),
                           std::forward_as_tuple(path));
 }
 
-void clibgame::Res::addFont(std::string path, int pnt) throw(std::runtime_error) {
+void clibgame::Res::addFont(std::string name, std::string path, int pnt) throw(std::runtime_error) {
     this->fonts.emplace(std::piecewise_construct,
-                        std::forward_as_tuple(path),
+                        std::forward_as_tuple(name),
                         std::forward_as_tuple(path, pnt));
 }
 
@@ -78,9 +78,10 @@ void clibgame::loadRes(Res& res, std::istream& stream) throw (std::runtime_error
     if (!stream.good() || stream.eof())
         throw std::runtime_error("Stream is not good.");
 
-    std::string prefix, path;
+    std::string prefix, name, path;
     while (!stream.eof()) {
         stream >> prefix;
+        stream >> name;
         stream >> path;
 
         if (prefix.compare("animation_f") == 0) {
@@ -96,7 +97,7 @@ void clibgame::loadRes(Res& res, std::istream& stream) throw (std::runtime_error
             stream >> beginFrame;
             stream >> endFrame;
 
-            res.addAnimation(path, cols, rows, frameLength, loops, beginFrame, endFrame);
+            res.addAnimation(name, path, cols, rows, frameLength, loops, beginFrame, endFrame);
         } if (prefix.compare("animation") == 0) {
             int cols, rows;
             float frameLength;
@@ -107,22 +108,22 @@ void clibgame::loadRes(Res& res, std::istream& stream) throw (std::runtime_error
             stream >> frameLength;
             stream >> loops;
 
-            res.addAnimation(path, cols, rows, frameLength, loops);
+            res.addAnimation(name, path, cols, rows, frameLength, loops);
         } else if (prefix.compare("texsheet") == 0) {
             int cols, rows;
             stream >> cols;
             stream >> rows;
 
-            res.addTexSheet(path, cols, rows);
+            res.addTexSheet(name, path, cols, rows);
         } else if (prefix.compare("texture") == 0) {
-            res.addTexture(path);
+            res.addTexture(name, path);
         } else if (prefix.compare("shader") == 0) {
-            res.addShader(path);
+            res.addShader(name, path);
         } else if (prefix.compare("font") == 0) {
             int pnt;
             stream >> pnt;
 
-            res.addFont(path, pnt);
+            res.addFont(name, path, pnt);
         }
     }
 }
