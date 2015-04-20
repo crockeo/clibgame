@@ -1,6 +1,6 @@
-texture res/test.png
+texture res/test.png res/test.png
 
-shader res/fontshader
-shader res/test
+shader res/fontshader res/fontshader
+shader res/test res/test
 
-font res/testfont.ttf 24
+font res/testfont.ttf res/testfont.ttf 24
