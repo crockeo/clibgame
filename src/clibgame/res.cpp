@@ -11,6 +11,13 @@
 clibgame::Res::Res() { }
 
 // Adding a set of resources.
+void clibgame::Res::addAnimation(std::string path, int cols, int rows, float frameLength, bool loops, int beginFrame, int endFrame) throw(std::runtime_error) {
+    this->animations.emplace(std::piecewise_construct,
+                             std::forward_as_tuple(path),
+                             std::forward_as_tuple(path, cols, rows, frameLength, loops, beginFrame, endFrame));
+}
+
+// Adding a set of resources.
 void clibgame::Res::addAnimation(std::string path, int cols, int rows, float frameLength, bool loops) throw(std::runtime_error) {
     this->animations.emplace(std::piecewise_construct,
                              std::forward_as_tuple(path),
@@ -76,15 +83,31 @@ void clibgame::loadRes(Res& res, std::istream& stream) throw (std::runtime_error
         stream >> prefix;
         stream >> path;
 
-        if (prefix.compare("animation") == 0) {
+        if (prefix.compare("animation_f") == 0) {
             int cols, rows;
+            float frameLength;
+            bool loops;
+            int beginFrame, endFrame;
+
+            stream >> cols;
+            stream >> rows;
+            stream >> frameLength;
+            stream >> loops;
+            stream >> beginFrame;
+            stream >> endFrame;
+
+            res.addAnimation(path, cols, rows, frameLength, loops, beginFrame, endFrame);
+        } if (prefix.compare("animation") == 0) {
+            int cols, rows;
+            float frameLength;
             bool loops;
 
             stream >> cols;
             stream >> rows;
+            stream >> frameLength;
             stream >> loops;
 
-            res.addAnimation(path, cols, rows, loops);
+            res.addAnimation(path, cols, rows, frameLength, loops);
         } else if (prefix.compare("texsheet") == 0) {
             int cols, rows;
             stream >> cols;
