@@ -19,6 +19,7 @@
 // Code //
 
 namespace clibgame {
+    // The event for a position changing.
     class CPositionEvent : public Event {
     private:
         const std::string name;
@@ -46,7 +47,7 @@ namespace clibgame {
 
     public:
         // Creating a new CPosition with a specified x & y coordinate.
-        CPosition(float, float);
+        CPosition(float, float, float, float);
 
         // Creating a new CPosition where the x & y coordinates are set to 0.
         CPosition();

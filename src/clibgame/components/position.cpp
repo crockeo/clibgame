@@ -23,9 +23,11 @@ void clibgame::CPosition::pushEvent() {
 }
 
 // Creating a new CPosition with a specified x & y coordinate.
-clibgame::CPosition::CPosition(float x, float y) {
+clibgame::CPosition::CPosition(float x, float y, float w, float h) {
     this->x = x;
     this->y = y;
+    this->w = w;
+    this->h = h;
 }
 
 // Creating a new CPosition where the x & y coordinates are set to 0.

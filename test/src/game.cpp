@@ -3,54 +3,6 @@
 //////////
 // Code //
 
-struct PositionEvent : public clibgame::Event {
-    std::string name;
-    float x, y;
-    float w, h;
-
-    PositionEvent(std::string name,
-                   float x, float y,
-                   float w, float h) {
-        this->name = name;
-
-        this->x = x;
-        this->y = y;
-        this->w = w;
-        this->h = h;
-    }
-
-    std::string getEventType() const { return this->name; }
-};
-
-struct Position : public clibgame::Component {
-    float x, y, w, h;
-    bool alert;
-
-    Position(float x, float y,
-             float w, float h,
-             bool alert) {
-        this->x = x;
-        this->y = y;
-
-        this->w = w;
-        this->h = h;
-
-        this->alert = alert;
-    }
-
-    std::string getName() const { return "position"; }
-
-    void translate(float dx, float dy) {
-        this->x += dx;
-        this->y += dy;
-
-        if (this->alert)
-            clibgame::ListenerManager::instance().alert(PositionEvent(this->getName(),
-                                                                      this->x, this->y,
-                                                                      this->w, this->h));
-    }
-};
-
 struct PlayerController : public clibgame::Component {
     float speed, dx, dy;
 
@@ -92,7 +44,7 @@ struct PlayerController : public clibgame::Component {
             this->dx -= this->dx * dt;
 
         if (dx != 0 || dy != 0) {
-            Position& p = dynamic_cast<Position&>(this->getOwner().getComponent("position"));
+            clibgame::CPosition& p = dynamic_cast<clibgame::CPosition&>(this->getOwner().getComponent("clibgame_position"));
             p.translate(dx * dt, dy * dt);
         }
     }
@@ -128,7 +80,7 @@ struct PlayerRender : public clibgame::Component,
     }
 
     PlayerRender() {
-        clibgame::ListenerManager::instance().registerListener(this, "position");
+        clibgame::ListenerManager::instance().registerListener(this, "clibgame_position_player");
 
         texture = nullptr;
         shader  = nullptr;
@@ -193,8 +145,8 @@ struct PlayerRender : public clibgame::Component,
     }
 
     void alert(const clibgame::Event&& e) {
-        if (e.getEventType() == "position") {
-            const PositionEvent&& pe = dynamic_cast<const PositionEvent&&>(e);
+        if (e.getEventType() == "clibgame_position_player") {
+            const clibgame::CPositionEvent&& pe = dynamic_cast<const clibgame::CPositionEvent&&>(e);
             this->updateVertices(pe.x, pe.y,
                                  pe.w, pe.h);
         }
@@ -427,7 +379,7 @@ struct AnimRender : public clibgame::Component {
 // Creating a new game.
 Game::Game() {
     this->addEntity("player");
-    this->getEntity("player").addComponent(new Position(0, 0, 0.1, 0.1, true));
+    this->getEntity("player").addComponent(new clibgame::CPosition(0, 0, 0.1, 0.1));
     this->getEntity("player").addComponent(new PlayerController(4));
     this->getEntity("player").addComponent(new PlayerRender());
 
