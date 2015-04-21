@@ -15,6 +15,7 @@
 
 #include "res/animation.hpp"
 #include "res/texsheet.hpp"
+#include "res/texable.hpp"
 #include "res/texture.hpp"
 #include "res/shader.hpp"
 #include "res/font.hpp"
