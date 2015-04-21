@@ -15,6 +15,8 @@ namespace clibgame {
         Delta d;
         while (running) {
             time += d.since();
+            if (cap > -1 && time > cap)
+                time = 0.f;
             clibgame::delayThread(fidelity);
         }
     }

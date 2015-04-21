@@ -1,6 +1,6 @@
 #include "animation.hpp"
 
-///////////
+//////////
 // Code //
 
 // Getting the row and column of the current frame.
@@ -22,10 +22,10 @@ clibgame::Animation::Animation(std::string path, int cols, int rows, float frame
         throw std::runtime_error("The ending frame cannot be before the beginning frame.");
 
     this->frameLength = frameLength;
-    this->loop = loop;
-    this->beginFrame = beginFrame;
-    this->endFrame = endFrame;
-    this->timer = Timer(loop ? -1 : frameLength * (endFrame - beginFrame));
+    this->loop        = loop;
+    this->beginFrame  = beginFrame;
+    this->endFrame    = endFrame;
+    this->timer       = Timer(loop ? frameLength * (endFrame - beginFrame) : -1);
 }
 
 // Loading an animation from the file system that will always loop and a

@@ -98,7 +98,7 @@ void clibgame::loadRes(Res& res, std::istream& stream) throw (std::runtime_error
             stream >> endFrame;
 
             res.addAnimation(name, path, cols, rows, frameLength, loops, beginFrame, endFrame);
-        } if (prefix.compare("animation") == 0) {
+        } else if (prefix.compare("animation") == 0) {
             int cols, rows;
             float frameLength;
             bool loops;
