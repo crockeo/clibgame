@@ -132,6 +132,9 @@ namespace clibgame {
         // Checking if this ECP contains an entity by a given name.
         bool hasEntity(std::string) const;
 
+        // Getting a list of names of the entities in this ECP.
+        std::vector<std::string> getEntityNames() const;
+
         // Getting a const reference to an entity.
         const Entity& getEntity(std::string) const throw(std::runtime_error);
 

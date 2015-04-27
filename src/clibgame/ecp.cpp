@@ -122,6 +122,14 @@ bool clibgame::ECP::hasEntity(std::string uid) const {
     return this->entities.find(uid) != this->entities.end();
 }
 
+// Getting a list of names of the entities in this ECP.
+std::vector<std::string> clibgame::ECP::getEntityNames() const {
+    std::vector<std::string> names;
+    for (auto it = entities.begin(); it != entities.end(); it++)
+        names.push_back(std::get<0>(*it));
+    return names;
+}
+
 // Getting a const reference to an entity.
 const clibgame::Entity& clibgame::ECP::getEntity(std::string uid) const throw(std::runtime_error) {
     return this->entities.at(uid);
