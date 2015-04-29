@@ -10,9 +10,9 @@
 // Includes //
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <unordered_map>
 #include <memory>
 #include <string>
-#include <map>
 #include <set>
 
 #include "res.hpp"
@@ -68,7 +68,7 @@ namespace clibgame {
     // A type to represent the container of a set of components.
     class Entity {
     private:
-        std::map<std::string, std::unique_ptr<Component>> components;
+        std::unordered_map<std::string, std::unique_ptr<Component>> components;
         std::string uid;
 
     public:
@@ -117,7 +117,7 @@ namespace clibgame {
 
     class ECP {
     private:
-        std::map<std::string, Entity> entities;
+        std::unordered_map<std::string, Entity> entities;
 
     public:
         // Creating an empty ECP.
@@ -133,10 +133,10 @@ namespace clibgame {
         bool hasEntity(std::string) const;
 
         // Returning some iterators into the entity list.
-        std::map<std::string, Entity>::const_iterator begin() const;
-        std::map<std::string, Entity>::iterator begin();
-        std::map<std::string, Entity>::const_iterator end() const;
-        std::map<std::string, Entity>::iterator end();
+        std::unordered_map<std::string, Entity>::const_iterator begin() const;
+        std::unordered_map<std::string, Entity>::iterator begin();
+        std::unordered_map<std::string, Entity>::const_iterator end() const;
+        std::unordered_map<std::string, Entity>::iterator end();
 
         // Getting a list of names of the entities in this ECP.
         std::vector<std::string> getEntityNames() const;

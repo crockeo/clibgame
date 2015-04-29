@@ -123,19 +123,19 @@ bool clibgame::ECP::hasEntity(std::string uid) const {
 }
 
 // Returning some iterators into the entity list.
-std::map<std::string, clibgame::Entity>::const_iterator clibgame::ECP::begin() const {
+std::unordered_map<std::string, clibgame::Entity>::const_iterator clibgame::ECP::begin() const {
     return entities.begin();
 }
 
-std::map<std::string, clibgame::Entity>::iterator clibgame::ECP::begin() {
+std::unordered_map<std::string, clibgame::Entity>::iterator clibgame::ECP::begin() {
     return entities.begin();
 }
 
-std::map<std::string, clibgame::Entity>::const_iterator clibgame::ECP::end() const {
+std::unordered_map<std::string, clibgame::Entity>::const_iterator clibgame::ECP::end() const {
     return entities.end();
 }
 
-std::map<std::string, clibgame::Entity>::iterator clibgame::ECP::end() {
+std::unordered_map<std::string, clibgame::Entity>::iterator clibgame::ECP::end() {
     return entities.end();
 }
 
