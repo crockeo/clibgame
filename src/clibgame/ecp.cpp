@@ -71,14 +71,14 @@ bool clibgame::Entity::hasComponent(std::string name) const {
 // Getting a const ref to a component from this entity.
 const clibgame::Component& clibgame::Entity::getComponent(std::string name) const throw(std::runtime_error) {
     if (this->components.find(name) == this->components.end())
-        throw std::runtime_error("No such component exists in this Entity.");
+        throw std::runtime_error("No such component exists in this Entity: \"" + name + "\" in \"" + getUID() + "\".");
     return *this->components.at(name);
 }
 
 // Getting a ref to a component from the entity.
 clibgame::Component& clibgame::Entity::getComponent(std::string name) throw(std::runtime_error) {
     if (this->components.find(name) == this->components.end())
-        throw std::runtime_error("No such component exists in this Entity.");
+        throw std::runtime_error("No such component exists in this Entity: \"" + name + "\" in \"" + getUID() + "\".");
     return *this->components[name];
 }
 
@@ -149,12 +149,18 @@ std::vector<std::string> clibgame::ECP::getEntityNames() const {
 
 // Getting a const reference to an entity.
 const clibgame::Entity& clibgame::ECP::getEntity(std::string uid) const throw(std::runtime_error) {
-    return this->entities.at(uid);
+    auto it = this->entities.find(uid);
+    if (it == this->entities.end())
+        throw std::runtime_error("There is no such entity \"" + uid + "\" in this ECP.");       
+    return std::get<1>(*it);
 }
 
 // Getting a reference to an entity.
 clibgame::Entity& clibgame::ECP::getEntity(std::string uid) throw(std::runtime_error) {
-    return this->entities.at(uid);
+    auto it = this->entities.find(uid);
+    if (it == this->entities.end())
+        throw std::runtime_error("There is no such entity \"" + uid + "\" in this ECP.");       
+    return std::get<1>(*it);
 }
 
 // Initializing the set of entities.
