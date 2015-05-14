@@ -26,12 +26,14 @@ find_library(CLIBGAME_LIBRARY
 
 # Finding dependencies and stuff.
 find_package(freetype REQUIRED)
+find_package(parsical REQUIRED)
 find_package(opengl REQUIRED)
 find_package(glew REQUIRED)
 find_package(glfw REQUIRED)
 find_package(png REQUIRED)
 
 set(CLIBGAME_INCLUDE_DIRS ${FREETYPE_INCLUDE_DIRS}
+                          ${PARSICAL_INCLUDE_DIRS}
                           ${CLIBGAME_INCLUDE_DIR}
                           ${OPENGL_INCLUDE_DIRS}
                           ${GLEW_INCLUDE_DIRS}
@@ -39,6 +41,7 @@ set(CLIBGAME_INCLUDE_DIRS ${FREETYPE_INCLUDE_DIRS}
                           ${PNG_INCLUDE_DIRS})
 
 set(CLIBGAME_LIBRARIES ${FREETYPE_LIBRARIES}
+                       ${PARSICAL_LIBRARIES}
                        ${CLIBGAME_LIBRARY}
                        ${OPENGL_LIBRARY}
                        ${GLEW_LIBRARY}

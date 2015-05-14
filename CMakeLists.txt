@@ -30,16 +30,19 @@ add_library(clibgame STATIC ${SOURCES})
 
 # Finding and setting up some packages.
 find_package(freetype REQUIRED)
+find_package(parsical REQUIRED)
 find_package(glew REQUIRED)
 find_package(glfw REQUIRED)
 find_package(png REQUIRED)
 
 include_directories(${FREETYPE_INCLUDE_DIRS}
+                    ${PARSICAL_INCLUDE_DIRS}
                     ${GLEW_INCLUDE_DIRS}
                     ${GLFW_INCLUDE_DIRS}
                     ${PNG_INCLUDE_DIRS})
 
 target_link_libraries(clibgame ${FREETYPE_LIBRARIES}
+                               ${PARSICAL_LIBRARIES}
                                ${GLEW_LIBRARY}
                                ${GLFW_LIBRARY}
                                ${PNG_LIBRARY})

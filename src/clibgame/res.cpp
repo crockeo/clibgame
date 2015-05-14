@@ -2,6 +2,7 @@
 
 //////////////
 // Includes //
+#include <parsical.hpp>
 #include <fstream>
 
 //////////
@@ -75,55 +76,67 @@ clibgame::Font clibgame::Res::getFont(std::string name) const {
 
 // Loading a set of resources from an std::istream.
 void clibgame::loadRes(Res& res, std::istream& stream) throw (std::runtime_error) {
-    if (!stream.good() || stream.eof())
-        throw std::runtime_error("Stream is not good.");
+    using namespace parsical::str;
 
+    parsical::IStreamParser p(stream);
     std::string prefix, name, path;
-    while (!stream.eof()) {
-        stream >> prefix;
-        stream >> name;
-        stream >> path;
 
-        if (prefix.compare("animation_f") == 0) {
-            int cols, rows;
-            float frameLength;
-            bool loops;
-            int beginFrame, endFrame;
+    while (!p.eof()) {
+        try {
+            consumeWhitespace(p);
+            prefix = parseString(p);
+            consumeWhitespace(p);
+            
+            name = parseString(p);
+            consumeWhitespace(p);
 
-            stream >> cols;
-            stream >> rows;
-            stream >> frameLength;
-            stream >> loops;
-            stream >> beginFrame;
-            stream >> endFrame;
+            path = parseString(p);
+            consumeWhitespace(p);
 
-            res.addAnimation(name, path, cols, rows, frameLength, loops, beginFrame, endFrame);
-        } else if (prefix.compare("animation") == 0) {
-            int cols, rows;
-            float frameLength;
-            bool loops;
+            if (prefix == "animation_f" || prefix == "animation") {
+                int cols = parseInt(p);
+                consumeWhitespace(p);
 
-            stream >> cols;
-            stream >> rows;
-            stream >> frameLength;
-            stream >> loops;
+                int rows = parseInt(p);
+                consumeWhitespace(p);
 
-            res.addAnimation(name, path, cols, rows, frameLength, loops);
-        } else if (prefix.compare("texsheet") == 0) {
-            int cols, rows;
-            stream >> cols;
-            stream >> rows;
+                float frameLength = parseFloat(p);
+                consumeWhitespace(p);
 
-            res.addTexSheet(name, path, cols, rows);
-        } else if (prefix.compare("texture") == 0) {
-            res.addTexture(name, path);
-        } else if (prefix.compare("shader") == 0) {
-            res.addShader(name, path);
-        } else if (prefix.compare("font") == 0) {
-            int pnt;
-            stream >> pnt;
+                bool loops = parseBool(p);
+                consumeWhitespace(p);
 
-            res.addFont(name, path, pnt);
+                if (prefix == "animation")
+                    res.addAnimation(name, path, cols, rows, frameLength, loops);
+                else {
+                    int beginFrame = parseInt(p);
+                    consumeWhitespace(p);
+
+                    int endFrame = parseInt(p);
+                    consumeWhitespace(p);
+
+                    res.addAnimation(name, path, cols, rows, frameLength, loops, beginFrame, endFrame);
+                }
+            } else if (prefix.compare("texsheet") == 0) {
+                int rows = parseInt(p);
+                consumeWhitespace(p);
+
+                int cols = parseInt(p);
+                consumeWhitespace(p);
+
+                res.addTexSheet(name, path, cols, rows);
+            } else if (prefix.compare("texture") == 0) {
+                res.addTexture(name, path);
+            } else if (prefix.compare("shader") == 0) {
+                res.addShader(name, path);
+            } else if (prefix.compare("font") == 0) {
+                int pnt = parseInt(p);
+                consumeWhitespace(p);
+
+                res.addFont(name, path, pnt);
+            }
+        } catch (parsical::ParseError& e) {
+            throw std::runtime_error(e.what());
         }
     }
 }
