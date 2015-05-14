@@ -3,6 +3,7 @@
 //////////////
 // Includes //
 #include <parsical.hpp>
+#include <cstring>
 #include <fstream>
 
 //////////
@@ -136,7 +137,7 @@ void clibgame::loadRes(Res& res, std::istream& stream) throw (std::runtime_error
                 res.addFont(name, path, pnt);
             }
         } catch (parsical::ParseError& e) {
-            throw std::runtime_error(e.what());
+            throw std::runtime_error(("Failed to load assets: " + std::string(e.what())).c_str());
         }
     }
 }
