@@ -10,6 +10,7 @@
 #include "clibgame/engineconfig.hpp"
 #include "clibgame/components.hpp"
 #include "clibgame/eventing.hpp"
+#include "clibgame/renderer.hpp"
 #include "clibgame/engine.hpp"
 #include "clibgame/delta.hpp"
 #include "clibgame/timer.hpp"
