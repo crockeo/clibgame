@@ -5,6 +5,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "renderer.hpp"
 #include "delta.hpp"
 
 //////////
@@ -12,7 +13,7 @@
 
 namespace clibgame {
     // The primary engine loop.
-    void engineLoop(GLFWwindow* window, EngineConfig cfg, ECP& ecp, const Res& resources) {
+    void engineLoop(GLFWwindow* window, EngineConfig cfg, ECP& ecp, Renderer& renderer, const Res& resources) {
         const float delay = 1.f / (cfg.ups >= cfg.rps ? cfg.ups : cfg.rps),
                     rCap  = 1.f / cfg.rps,
                     uCap  = 1.f / cfg.ups;
@@ -30,7 +31,7 @@ namespace clibgame {
 
             if (rTime > rCap) {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-                ecp.renderEntities();
+                ecp.renderEntities(renderer);
                 glfwSwapBuffers(window);
 
                 rTime = 0.f;
@@ -50,7 +51,7 @@ namespace clibgame {
 
 // Starting the engine from an ECP derivative and the location of a set of
 // resources.
-void clibgame::startEngine(EngineConfig cfg, ECP& ecp, std::string path) throw(std::runtime_error) {
+void clibgame::startEngine(EngineConfig cfg, ECP& ecp, Renderer& renderer, std::string path) throw(std::runtime_error) {
     // Initializing GLFW.
     if (!glfwInit())
         throw std::runtime_error("Failed to initialize GLFW.");
@@ -106,7 +107,7 @@ void clibgame::startEngine(EngineConfig cfg, ECP& ecp, std::string path) throw(s
     ecp.initEntities(window, resources);
 
     // Starting the update threads.
-    clibgame::engineLoop(window, cfg, ecp, resources);
+    clibgame::engineLoop(window, cfg, ecp, renderer, resources);
 
     // Cleaning up.
     glfwTerminate();

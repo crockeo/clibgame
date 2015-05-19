@@ -15,6 +15,7 @@
 #include <string>
 #include <set>
 
+#include "renderer.hpp"
 #include "res.hpp"
 
 //////////
@@ -62,7 +63,7 @@ namespace clibgame {
         virtual void update(GLFWwindow*, const ECP&, float) { };
 
         // Rendering a component.
-        virtual void render() const { };
+        virtual void render(Renderer&) const { };
     };
 
     // A type to represent the container of a set of components.
@@ -112,7 +113,7 @@ namespace clibgame {
         void updateComponents(GLFWwindow*, const ECP&, float);
 
         // Rendering the set of components.
-        void renderComponents() const;
+        void renderComponents(Renderer&) const;
     };
 
     class ECP {
@@ -154,7 +155,7 @@ namespace clibgame {
         void updateEntities(GLFWwindow*, float);
 
         // Rendering the set of entities.
-        void renderEntities() const;
+        void renderEntities(Renderer&) const;
     };
 }
 

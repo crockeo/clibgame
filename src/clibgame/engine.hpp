@@ -11,6 +11,7 @@
 #include <string>
 
 #include "engineconfig.hpp"
+#include "renderer.hpp"
 #include "ecp.hpp"
 #include "res.hpp"
 
@@ -20,7 +21,7 @@
 namespace clibgame {
     // Starting the engine from an ECP derivative and the location of a set of
     // resources.
-    void startEngine(EngineConfig, ECP&, std::string) throw(std::runtime_error);
+    void startEngine(EngineConfig, ECP&, Renderer&, std::string) throw(std::runtime_error);
 }
 
 #endif
