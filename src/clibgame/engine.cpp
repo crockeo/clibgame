@@ -31,7 +31,10 @@ namespace clibgame {
 
             if (rTime > rCap) {
                 glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+                renderer.clear();
+
                 ecp.renderEntities(renderer);
+                renderer.render();
                 glfwSwapBuffers(window);
 
                 rTime = 0.f;
