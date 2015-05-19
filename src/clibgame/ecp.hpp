@@ -62,8 +62,12 @@ namespace clibgame {
         // Updating a component.
         virtual void update(GLFWwindow*, const ECP&, float) { };
 
+        // Rendering a component without the Renderer reference so that this
+        // doesn't break backwards compatibility.
+        virtual void render() const { };
+
         // Rendering a component.
-        virtual void render(Renderer&) const { };
+        virtual void render(Renderer&) const { render(); };
     };
 
     // A type to represent the container of a set of components.

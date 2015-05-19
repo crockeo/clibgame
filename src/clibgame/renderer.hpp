@@ -9,7 +9,7 @@ namespace clibgame {
         virtual void render() const = 0;
 
         // Clearing the last render from the renderer.
-        virtual void clear();
+        virtual void clear() { };
     };
 }
 
