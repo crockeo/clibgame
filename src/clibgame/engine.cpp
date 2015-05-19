@@ -115,3 +115,10 @@ void clibgame::startEngine(EngineConfig cfg, ECP& ecp, Renderer& renderer, std::
     // Cleaning up.
     glfwTerminate();
 }
+
+// Starting the engine from an ECP derivative and the location of a set of
+// resources. It calls the startEngine function with an empty Renderer.
+void clibgame::startEngine(clibgame::EngineConfig config, clibgame::ECP& ecp, std::string path) throw(std::runtime_error) {
+    clibgame::NullRenderer renderer;
+    startEngine(config, ecp, renderer, path);
+}

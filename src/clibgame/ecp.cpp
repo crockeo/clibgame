@@ -95,7 +95,7 @@ void clibgame::Entity::updateComponents(GLFWwindow* window, const clibgame::ECP&
 }
 
 // Rendering the set of components.
-void clibgame::Entity::renderComponents(Renderer& renderer) const {
+void clibgame::Entity::renderComponents(clibgame::Renderer& renderer) const {
     for (auto& pair: this->components)
         std::get<1>(pair)->render(renderer);
 }
@@ -176,7 +176,7 @@ void clibgame::ECP::updateEntities(GLFWwindow* window, float dt) {
 }
 
 // Rendering the set of entities.
-void clibgame::ECP::renderEntities(Renderer& renderer) const {
+void clibgame::ECP::renderEntities(clibgame::Renderer& renderer) const {
     for (auto& pair: this->entities)
         std::get<1>(pair).renderComponents(renderer);
 }

@@ -22,6 +22,10 @@ namespace clibgame {
     // Starting the engine from an ECP derivative and the location of a set of
     // resources.
     void startEngine(EngineConfig, ECP&, Renderer&, std::string) throw(std::runtime_error);
+
+    // Starting the engine from an ECP derivative and the location of a set of
+    // resources. It calls the startEngine function with an empty Renderer.
+    void startEngine(EngineConfig, ECP&, std::string) throw(std::runtime_error);
 }
 
 #endif
