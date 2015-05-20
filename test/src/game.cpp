@@ -1,5 +1,9 @@
 #include "game.hpp"
 
+//////////////
+// Includes //
+#include "renderer.hpp"
+
 //////////
 // Code //
 
@@ -54,29 +58,13 @@ struct PlayerRender : public clibgame::Component,
                       public clibgame::Listener {
     clibgame::Texture* texture;
     clibgame::Shader* shader;
-    GLuint vao, vbo, ebo;
-
-    std::vector<GLfloat> generateCoords(float x, float y,
-                                        float w, float h) {
-        std::vector<GLfloat> vertices = {
-            x    , y    , 0, 0,
-            x + w, y    , 1, 0,
-            x + w, y + h, 1, 1,
-            x    , y + h, 0, 1
-        };
-
-        return vertices;
-    }
+    float x, y, w, h;
 
     void updateVertices(float x, float y, float w, float h) {
-        auto vVertices = generateCoords(x, y, w, h);
-
-        GLfloat aVertices[vVertices.size()];
-        for (int i = 0; i < vVertices.size(); i++)
-            aVertices[i] = vVertices.at(i);
-
-        glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(aVertices), aVertices, GL_DYNAMIC_DRAW);
+        this->x = x;
+        this->y = y;
+        this->w = w;
+        this->h = h;
     }
 
     PlayerRender() {
@@ -84,9 +72,6 @@ struct PlayerRender : public clibgame::Component,
 
         texture = nullptr;
         shader  = nullptr;
-        vao     = 0;
-        vbo     = 0;
-        ebo     = 0;
     }
 
     ~PlayerRender() {
@@ -94,10 +79,6 @@ struct PlayerRender : public clibgame::Component,
             delete texture;
         if (shader != nullptr)
             delete shader;
-
-        glDeleteVertexArrays(1, &this->vao);
-        glDeleteBuffers(1, &this->vbo);
-        glDeleteBuffers(1, &this->ebo);
     }
 
     std::string getName() const { return "playerRender"; }
@@ -105,43 +86,17 @@ struct PlayerRender : public clibgame::Component,
     void init(GLFWwindow* window, const clibgame::ECP& ecp, const clibgame::Res& res) {
         texture = new clibgame::Texture(res.getTexture("res/test.png"));
         shader = new clibgame::Shader(res.getShader("res/test"));
-
-        glGenVertexArrays(1, &this->vao);
-        glBindVertexArray(this->vao);
-
-        glGenBuffers(1, &this->vbo);
-        this->updateVertices(0, 0, 0.1, 0.1);
-
-        glGenBuffers(1, &this->ebo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
-
-        GLuint order[] = {
-            0, 1, 2,
-            2, 3, 0
-        };
-
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(order), order, GL_STATIC_DRAW);
     }
+    virtual void render(clibgame::Renderer& cRenderer) const override {
+        Renderer& renderer = dynamic_cast<Renderer&>(cRenderer);
+        Render render;
 
-    void render() const {
-        glBindVertexArray(this->vao);
-        glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
+        render.coordinates = generateCoords(*texture, x, y, w, h);
+        render.order = STANDARD_ORDER;
+        render.texable = texture;
+        render.shader = shader;
 
-        glUseProgram(this->shader->getShaderID());
-
-        // Initializing the coordinates.
-        GLint coordAttrib = glGetAttribLocation(this->shader->getShaderID(), "in_coordinates");
-
-        glEnableVertexAttribArray(coordAttrib);
-        glVertexAttribPointer(coordAttrib, 4, GL_FLOAT, GL_FALSE, 0, 0);
-
-        // Initializing the texture.
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, this->texture->getTextureID());
-        glUniform1i(glGetUniformLocation(this->shader->getShaderID(), "in_tex"), 0);
-
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        renderer.addRender(render);
     }
 
     void alert(const clibgame::Event&& e) {
@@ -280,43 +235,17 @@ struct TextRender : public clibgame::Component {
 struct AnimRender : public clibgame::Component {
     clibgame::Animation* texture;
     clibgame::Shader* shader;
-    GLuint vao, vbo, ebo;
     std::string animName;
-    float x;
 
-    std::vector<GLfloat> generateCoords(float x, float y,
-                                        float w, float h) const {
-        auto tc = texture->getTextureCoords();
-        std::vector<GLfloat> vertices = {
-            x    , y    , tc[0], tc[1],
-            x + w, y    , tc[2], tc[3],
-            x + w, y + h, tc[4], tc[5],
-            x    , y + h, tc[6], tc[7]
-        };
+    const float x, y, w, h;
 
-        return vertices;
-    }
-
-    void updateVertices(float x, float y, float w, float h) const {
-        auto vVertices = generateCoords(x, y, w, h);
-
-        GLfloat aVertices[vVertices.size()];
-        for (int i = 0; i < vVertices.size(); i++)
-            aVertices[i] = vVertices.at(i);
-
-        glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(aVertices), aVertices, GL_DYNAMIC_DRAW);
-    }
-
-    AnimRender(std::string animName, float x) {
+    AnimRender(std::string animName, float x) :
+            x(x  ), y(0  ),
+            w(0.1), h(0.1) {
         this->animName = animName;
-        this->x = x;
 
         texture = nullptr;
         shader  = nullptr;
-        vao     = 0;
-        vbo     = 0;
-        ebo     = 0;
     }
 
     ~AnimRender() {
@@ -324,10 +253,6 @@ struct AnimRender : public clibgame::Component {
             delete texture;
         if (shader != nullptr)
             delete shader;
-
-        glDeleteVertexArrays(1, &this->vao);
-        glDeleteBuffers(1, &this->vbo);
-        glDeleteBuffers(1, &this->ebo);
     }
 
     std::string getName() const { return "animRender"; }
@@ -335,44 +260,18 @@ struct AnimRender : public clibgame::Component {
     void init(GLFWwindow* window, const clibgame::ECP& ecp, const clibgame::Res& res) {
         texture = new clibgame::Animation(res.getAnimation(this->animName));
         shader = new clibgame::Shader(res.getShader("res/test"));
-
-        glGenVertexArrays(1, &this->vao);
-        glBindVertexArray(this->vao);
-
-        glGenBuffers(1, &this->vbo);
-        this->updateVertices(this->x, 0, 0.1, 0.1);
-
-        glGenBuffers(1, &this->ebo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
-
-        GLuint order[] = {
-            0, 1, 2,
-            2, 3, 0
-        };
-
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(order), order, GL_STATIC_DRAW);
     }
 
-    void render() const {
-        this->updateVertices(this->x, 0, 0.1, 0.1);
-        glBindVertexArray(this->vao);
-        glBindBuffer(GL_ARRAY_BUFFER, this->vbo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ebo);
+    virtual void render(clibgame::Renderer& cRenderer) const override {
+        Renderer& renderer = dynamic_cast<Renderer&>(cRenderer);
+        Render render;
 
-        glUseProgram(this->shader->getShaderID());
+        render.coordinates = generateCoords(*texture, x, y, w, h);
+        render.order = STANDARD_ORDER;
+        render.texable = texture;
+        render.shader = shader;
 
-        // Initializing the coordinates.
-        GLint coordAttrib = glGetAttribLocation(this->shader->getShaderID(), "in_coordinates");
-
-        glEnableVertexAttribArray(coordAttrib);
-        glVertexAttribPointer(coordAttrib, 4, GL_FLOAT, GL_FALSE, 0, 0);
-
-        // Initializing the texture.
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, this->texture->getTextureID());
-        glUniform1i(glGetUniformLocation(this->shader->getShaderID(), "in_tex"), 0);
-
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        renderer.addRender(render);
     }
 };
 

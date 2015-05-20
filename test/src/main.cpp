@@ -5,6 +5,7 @@
 #include <clibgame.hpp>
 #include <iostream>
 
+#include "renderer.hpp"
 #include "game.hpp"
 
 //////////
@@ -17,10 +18,12 @@ int main(int argc, char** argv) {
     cfg.ups = 240;
     cfg.rps = 120;
 
-    Game game;
 
     try {
-        clibgame::startEngine(cfg, game, "res/assetspec.txt");
+        Game game;
+        Renderer renderer;
+
+        clibgame::startEngine(cfg, game, renderer, "res/assetspec.txt");
     } catch (std::runtime_error& e) {
         std::cout << e.what() << std::endl;
         return 1;
