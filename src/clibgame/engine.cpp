@@ -108,6 +108,7 @@ void clibgame::startEngine(EngineConfig cfg, ECP& ecp, Renderer& renderer, std::
     }
 
     ecp.initEntities(window, resources);
+    renderer.init(window, resources);
 
     // Starting the update threads.
     clibgame::engineLoop(window, cfg, ecp, renderer, resources);
