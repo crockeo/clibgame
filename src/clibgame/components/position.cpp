@@ -38,7 +38,7 @@ clibgame::CPosition::CPosition(float x, float y, float w, float h,
 // Creating a new CPosition with a specified x & y coordinate.
 clibgame::CPosition::CPosition(float x, float y, float w, float h) :
         clibgame::CPosition(x, y, w, h,
-                            doCollide) { }
+                            false) { }
 
 // Creating a new CPosition where the x & y coordinates are set to 0.
 clibgame::CPosition::CPosition() :

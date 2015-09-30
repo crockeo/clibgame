@@ -20,7 +20,7 @@ namespace clibgame {
 
         // This function is run a single time after the OpenGL context has been
         // created for initialization purposes.
-        virtual void init(GLFWwindow*, Res&) { }
+        virtual void init(GLFWwindow*, const Res&) { }
 
         // Rendering the scene according to some information inside the
         // renderer. 
