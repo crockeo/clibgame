@@ -4,9 +4,22 @@ project(clibgame)
 # Setting compiler flags.
 set(CMAKE_CXX_FLAGS "-Wall -O2 -std=c++11 ${CMAKE_CXX_FLAGS}")
 
+# Expanding the module path.
+LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
 # Setting the output directories.
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/build/bin")
 set(LIBRARY_OUTPUT_PATH    "${PROJECT_SOURCE_DIR}/build/lib")
+
+# Finding and setting up some packages.
+find_package(freetype REQUIRED)
+find_package(parsical REQUIRED)
+find_package(GLEW REQUIRED)
+find_package(GLFW REQUIRED)
+find_package(PNG REQUIRED)
+
+####
+# Primary Core Library (will be split up later).
 
 # Declaring the set of sources.
 set(SOURCES
@@ -28,13 +41,6 @@ set(SOURCES
 # Adding this library.
 add_library(clibgame STATIC ${SOURCES})
 
-# Finding and setting up some packages.
-find_package(freetype REQUIRED)
-find_package(parsical REQUIRED)
-find_package(glew REQUIRED)
-find_package(glfw REQUIRED)
-find_package(png REQUIRED)
-
 include_directories(${FREETYPE_INCLUDE_DIRS}
                     ${PARSICAL_INCLUDE_DIRS}
                     ${GLEW_INCLUDE_DIRS}
@@ -46,6 +52,37 @@ target_link_libraries(clibgame ${FREETYPE_LIBRARIES}
                                ${GLEW_LIBRARY}
                                ${GLFW_LIBRARY}
                                ${PNG_LIBRARY})
+
+####
+# The *Real* Core clibgame Library.
+#
+# Consists of features used by multiple parts of the library. Abstracted out
+# into core functionality.
+
+set(CORE_HEADERS
+  src/clibgame/core/debug.hpp
+  src/clibgame/core/uuid.hpp
+)
+
+set(CORE_SOURCES
+  src/clibgame/core/debug.cpp
+  src/clibgame/core/uuid.cpp
+)
+
+add_library(clibgame-core SHARED ${CORE_SOURCES})
+
+####
+# The Entity Components System.
+#
+# An entity component system. Solely dependent on the C++ standard library.
+
+# Consists of a singular file, so I'm skipping that fancy mumbojumbo.
+add_library(clibgame-ecs SHARED src/clibgame/ecs.cpp)
+
+target_link_libraries(clibgame-ecs clibgame-core)
+
+####
+# Installation Targets
 
 # Declaring how we should install this.
 install(TARGETS clibgame
