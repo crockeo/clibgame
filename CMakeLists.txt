@@ -12,46 +12,46 @@ set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/build/bin")
 set(LIBRARY_OUTPUT_PATH    "${PROJECT_SOURCE_DIR}/build/lib")
 
 # Finding and setting up some packages.
-find_package(freetype REQUIRED)
-find_package(parsical REQUIRED)
-find_package(GLEW REQUIRED)
-find_package(GLFW REQUIRED)
-find_package(PNG REQUIRED)
+#find_package(freetype REQUIRED)
+#find_package(parsical REQUIRED)
+#find_package(GLEW REQUIRED)
+#find_package(GLFW REQUIRED)
+#find_package(PNG REQUIRED)
 
 ####
 # Primary Core Library (will be split up later).
 
 # Declaring the set of sources.
-set(SOURCES
-  src/clibgame/components/position.cpp
-  src/clibgame/res/animation.cpp
-  src/clibgame/res/texsheet.cpp
-  src/clibgame/engineconfig.cpp
-  src/clibgame/res/texture.cpp
-  src/clibgame/res/shader.cpp
-  src/clibgame/res/font.cpp
-  src/clibgame/eventing.cpp
-  src/clibgame/engine.cpp
-  src/clibgame/delta.cpp
-  src/clibgame/timer.cpp
-  src/clibgame/ecp.cpp
-  src/clibgame/res.cpp
-)
+#set(SOURCES
+  #src/clibgame/components/position.cpp
+  #src/clibgame/res/animation.cpp
+  #src/clibgame/res/texsheet.cpp
+  #src/clibgame/engineconfig.cpp
+  #src/clibgame/res/texture.cpp
+  #src/clibgame/res/shader.cpp
+  #src/clibgame/res/font.cpp
+  #src/clibgame/eventing.cpp
+  #src/clibgame/engine.cpp
+  #src/clibgame/delta.cpp
+  #src/clibgame/timer.cpp
+  #src/clibgame/ecp.cpp
+  #src/clibgame/res.cpp
+#)
 
 # Adding this library.
-add_library(clibgame STATIC ${SOURCES})
+#add_library(clibgame STATIC ${SOURCES})
 
-include_directories(${FREETYPE_INCLUDE_DIRS}
-                    ${PARSICAL_INCLUDE_DIRS}
-                    ${GLEW_INCLUDE_DIRS}
-                    ${GLFW_INCLUDE_DIRS}
-                    ${PNG_INCLUDE_DIRS})
+#include_directories(${FREETYPE_INCLUDE_DIRS}
+                    #${PARSICAL_INCLUDE_DIRS}
+                    #${GLEW_INCLUDE_DIRS}
+                    #${GLFW_INCLUDE_DIRS}
+                    #${PNG_INCLUDE_DIRS})
 
-target_link_libraries(clibgame ${FREETYPE_LIBRARIES}
-                               ${PARSICAL_LIBRARIES}
-                               ${GLEW_LIBRARY}
-                               ${GLFW_LIBRARY}
-                               ${PNG_LIBRARY})
+#target_link_libraries(clibgame ${FREETYPE_LIBRARIES}
+                               #${PARSICAL_LIBRARIES}
+                               #${GLEW_LIBRARY}
+                               #${GLFW_LIBRARY}
+                               #${PNG_LIBRARY})
 
 ####
 # The *Real* Core clibgame Library.
@@ -85,13 +85,13 @@ target_link_libraries(clibgame-ecs clibgame-core)
 # Installation Targets
 
 # Declaring how we should install this.
-install(TARGETS clibgame
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib/static)
+#install(TARGETS clibgame
+        #LIBRARY DESTINATION lib
+        #ARCHIVE DESTINATION lib/static)
 
-install(DIRECTORY src/
-        DESTINATION include
-        FILES_MATCHING PATTERN *.hpp)
+#install(DIRECTORY src/
+        #DESTINATION include
+        #FILES_MATCHING PATTERN *.hpp)
 
-install(FILES src/Findclibgame.cmake
-        DESTINATION "${CMAKE_ROOT}/Modules")
+#install(FILES src/Findclibgame.cmake
+        #DESTINATION "${CMAKE_ROOT}/Modules")
