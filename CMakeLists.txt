@@ -30,42 +30,7 @@ include_directories(
 )
 
 ####
-# Primary Core Library (will be split up later).
-
-# Declaring the set of sources.
-#set(SOURCES
-  #src/clibgame/components/position.cpp
-  #src/clibgame/res/animation.cpp
-  #src/clibgame/res/texsheet.cpp
-  #src/clibgame/engineconfig.cpp
-  #src/clibgame/res/texture.cpp
-  #src/clibgame/res/shader.cpp
-  #src/clibgame/res/font.cpp
-  #src/clibgame/eventing.cpp
-  #src/clibgame/engine.cpp
-  #src/clibgame/delta.cpp
-  #src/clibgame/timer.cpp
-  #src/clibgame/ecp.cpp
-  #src/clibgame/res.cpp
-#)
-
-# Adding this library.
-#add_library(clibgame STATIC ${SOURCES})
-
-#include_directories(${FREETYPE_INCLUDE_DIRS}
-                    #${PARSICAL_INCLUDE_DIRS}
-                    #${GLEW_INCLUDE_DIRS}
-                    #${GLFW_INCLUDE_DIRS}
-                    #${PNG_INCLUDE_DIRS})
-
-#target_link_libraries(clibgame ${FREETYPE_LIBRARIES}
-                               #${PARSICAL_LIBRARIES}
-                               #${GLEW_LIBRARY}
-                               #${GLFW_LIBRARY}
-                               #${PNG_LIBRARY})
-
-####
-# The *Real* Core clibgame Library.
+# Core clibgame Library.
 #
 # Consists of features used by multiple parts of the library. Abstracted out
 # into core functionality.
@@ -84,7 +49,7 @@ set(CORE_SOURCES
 add_library(clibgame-core SHARED ${CORE_SOURCES})
 
 ####
-# The Entity Components System.
+# Entity Components System.
 #
 # An entity component system. Solely dependent on the C++ standard library.
 
