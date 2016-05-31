@@ -1,3 +1,14 @@
+// Name     : clibgame/ecs.hpp
+// Author(s): Cerek Hillen
+// Init Date: 2016-05-29
+// Edit Date: 2016-05-30
+//
+// Description:
+//   An implementation of a platform-agnostic Entity/Component/System. This is
+//   advantageous as you need not depend on platform-specific modules, but means
+//   passing in external data (window information / user input) must be done
+//   outside of this abstraction.
+
 #ifndef _CLIBGAME_ECS_HPP_
 #define _CLIBGAME_ECS_HPP_
 
