@@ -82,6 +82,33 @@ add_library(clibgame-ecs SHARED src/clibgame/ecs.cpp)
 target_link_libraries(clibgame-ecs clibgame-core)
 
 ####
+# Resource Loading Library.
+#
+# Functionality to manage loading different assets into the application. Handles
+# the loading of textures, shaders, and sounds, as well as the organization of
+# those files in blob files. Finally, it contains an asset manager which can
+# parse asset specification files & precache them on startup.
+
+set(RESOURCE_HEADERS
+  src/clibgame/resource/manager.cpp
+  src/clibgmae/resource/texture.hpp
+  src/clibgame/resource/shader.hpp
+  src/clibgame/resource/sound.hpp
+  src/clibgame/resource/pak.hpp
+  src/clibgame/resource.hpp
+)
+
+set(RESOURCE_SOURCES
+  src/clibgame/resource/manager.cpp
+  src/clibgame/resource/texture.cpp
+  src/clibgame/resource/shader.cpp
+  src/clibgame/resource/sound.cpp
+  src/clibgame/resource/pak.cpp
+)
+
+#add_library(clibgame-resource SHARED ${RESOURCE_SOURCES})
+
+####
 # Installation Targets
 
 # Declaring how we should install this.
