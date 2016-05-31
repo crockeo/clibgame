@@ -11,12 +11,23 @@ LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/build/bin")
 set(LIBRARY_OUTPUT_PATH    "${PROJECT_SOURCE_DIR}/build/lib")
 
+####
+# Setting up required packages.
+
 # Finding and setting up some packages.
-#find_package(freetype REQUIRED)
-#find_package(parsical REQUIRED)
-#find_package(GLEW REQUIRED)
-#find_package(GLFW REQUIRED)
-#find_package(PNG REQUIRED)
+find_package(freetype REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
+find_package(GLFW REQUIRED)
+find_package(PNG REQUIRED)
+
+include_directories(
+  ${FREETYPE_INCLUDE_DIRS}
+  ${OPENGL_INCLUDE_DIRS}
+  ${GLEW_INCLUDE_DIRS}
+  ${GLFW_INCLUDE_DIRS}
+  ${PNG_INCLUDE_DIRS}
+)
 
 ####
 # Primary Core Library (will be split up later).
@@ -62,6 +73,7 @@ set(LIBRARY_OUTPUT_PATH    "${PROJECT_SOURCE_DIR}/build/lib")
 set(CORE_HEADERS
   src/clibgame/core/debug.hpp
   src/clibgame/core/uuid.hpp
+  src/clibgame/core/all.hpp
 )
 
 set(CORE_SOURCES
@@ -89,24 +101,32 @@ target_link_libraries(clibgame-ecs clibgame-core)
 # those files in blob files. Finally, it contains an asset manager which can
 # parse asset specification files & precache them on startup.
 
-set(RESOURCE_HEADERS
-  src/clibgame/resource/manager.cpp
-  src/clibgmae/resource/texture.hpp
-  src/clibgame/resource/shader.hpp
-  src/clibgame/resource/sound.hpp
-  src/clibgame/resource/pak.hpp
-  src/clibgame/resource.hpp
+set(RES_HEADERS
+  src/clibgame/res/manager.cpp
+  src/clibgmae/res/texture.hpp
+  src/clibgame/res/shader.hpp
+  src/clibgame/res/sound.hpp
+  src/clibgame/res/pak.hpp
+  src/clibgame/res/all.hpp
 )
 
-set(RESOURCE_SOURCES
-  src/clibgame/resource/manager.cpp
-  src/clibgame/resource/texture.cpp
-  src/clibgame/resource/shader.cpp
-  src/clibgame/resource/sound.cpp
-  src/clibgame/resource/pak.cpp
+set(RES_SOURCES
+  src/clibgame/res/manager.cpp
+  src/clibgame/res/texture.cpp
+  src/clibgame/res/shader.cpp
+  src/clibgame/res/sound.cpp
+  src/clibgame/res/pak.cpp
 )
 
-#add_library(clibgame-resource SHARED ${RESOURCE_SOURCES})
+add_library(clibgame-res SHARED ${RES_SOURCES})
+
+target_link_libraries(clibgame-res
+  ${FREETYPE_LIBRARIES}
+  ${OPENGL_LIBRARIES}
+  ${GLEW_LIBRARY}
+  ${GLFW_LIBRARY}
+  ${PNG_LIBRARY}
+)
 
 ####
 # Installation Targets
