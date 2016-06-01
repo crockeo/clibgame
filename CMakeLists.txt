@@ -94,6 +94,15 @@ target_link_libraries(clibgame-res
 )
 
 ####
+# Pakker
+#
+# An application based on the Core library to construct and destruct .pak files.
+
+add_executable(pakker src/pakker.cpp)
+
+target_link_libraries(pakker clibgame-core)
+
+####
 # Installation Targets
 
 # Declaring how we should install this.

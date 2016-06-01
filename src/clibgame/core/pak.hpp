@@ -26,7 +26,7 @@
  */
 
 namespace clibgame {
-    namespace res {
+    namespace core {
         // The abstract definition of a Pak -- something that can provide a
         struct Pak {
             virtual ~Pak() { }
@@ -120,7 +120,7 @@ namespace clibgame {
         };
 
         // Constructing a PAK file from a vector of files on the filesystem.
-        void constructPakFile(std::string outPath, std::vector<std::string> paths);
+        void constructPakFile(std::string outPath, std::vector<std::string> paths) throw(std::runtime_error);
     }
 }
 

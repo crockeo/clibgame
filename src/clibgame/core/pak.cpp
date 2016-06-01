@@ -8,7 +8,7 @@
 // Code //
 
 namespace clibgame {
-    namespace res {
+    namespace core {
         ////
         // FileSystemPak
 
@@ -78,5 +78,12 @@ namespace clibgame {
 
         // Checking if a file is open.
         bool RealPak::isOpen() const { return open; }
+
+        ////
+        // Global Functions
+
+        // Constructing a PAK file from a vector of files on the filesystem.
+        void constructPakFile(std::string outPath, std::vector<std::string> paths) throw(std::runtime_error) {
+        }
     }
 }
