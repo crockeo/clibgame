@@ -38,12 +38,14 @@ include_directories(
 set(CORE_HEADERS
   src/clibgame/core/debug.hpp
   src/clibgame/core/uuid.hpp
+  src/clibgame/core/pak.hpp
   src/clibgame/core/all.hpp
 )
 
 set(CORE_SOURCES
   src/clibgame/core/debug.cpp
   src/clibgame/core/uuid.cpp
+  src/clibgame/core/pak.cpp
 )
 
 add_library(clibgame-core SHARED ${CORE_SOURCES})
@@ -71,7 +73,6 @@ set(RES_HEADERS
   src/clibgmae/res/texture.hpp
   src/clibgame/res/shader.hpp
   src/clibgame/res/sound.hpp
-  src/clibgame/res/pak.hpp
   src/clibgame/res/all.hpp
 )
 
@@ -80,7 +81,6 @@ set(RES_SOURCES
   src/clibgame/res/texture.cpp
   src/clibgame/res/shader.cpp
   src/clibgame/res/sound.cpp
-  src/clibgame/res/pak.cpp
 )
 
 add_library(clibgame-res SHARED ${RES_SOURCES})
