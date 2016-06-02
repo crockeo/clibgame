@@ -164,46 +164,21 @@ std::tuple<GLuint, int, int> loadPNG(std::string path) {
     return texture;
 }
 
-// Loading a texture from the disk.
-clibgame::Texture::Texture(std::string path) throw(std::runtime_error) {
-    auto png = loadPNG(path);
+namespace clibgame {
+    namespace res {
+        // Loading a texture from the filesystem.
+        Texture Texture::load(std::string path) throw(std::runtime_error) {
+            Texture t;
 
-    if (png == BAD_RETURN)
-        throw std::runtime_error("Failed to load PNG from '" + path + "'!");
+            auto png = loadPNG(path);
+            if (png == BAD_RETURN)
+                throw std::runtime_error("Failed to load PNG from '" + path + "'!");
 
-    this->width    = std::get<1>(png);
-    this->height   = std::get<2>(png);
-    this->original = true;
-    this->id       = std::get<0>(png);
-}
+            t.id     = std::get<0>(png);
+            t.width  = std::get<1>(png);
+            t.height = std::get<2>(png);
 
-// Copy constructor.
-clibgame::Texture::Texture(const clibgame::Texture& tex) {
-    this->original = false;
-    *this = tex;
-}
-
-// Destroying this texture.
-clibgame::Texture::~Texture() {
-    if (this->original)
-        glDeleteTextures(1, &this->id);
-}
-
-// Some accessors.
-int clibgame::Texture::getWidth() const { return this->width; }
-int clibgame::Texture::getHeight() const { return this->height; }
-bool clibgame::Texture::isOriginal() const { return this->original; }
-GLuint clibgame::Texture::getTextureID() const { return this->id; }
-std::vector<GLfloat> clibgame::Texture::getTextureCoords() const {
-    return std::vector<GLfloat> {
-        0.f, 0.f,
-        1.f, 0.f,
-        1.f, 1.f,
-        0.f, 1.f
-    };
-}
-
-// Binding this texture.
-void clibgame::Texture::bind() const {
-    glBindTexture(GL_TEXTURE_2D, this->id);
+            return t;
+        }
+    }
 }

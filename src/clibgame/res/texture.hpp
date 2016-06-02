@@ -1,3 +1,11 @@
+// Name     : clibgame/res/texture.hpp
+// Author(s): Cerek Hillen
+// Init Date: 2016-06-02
+// Edit Date: 2016-06-02
+//
+// Description:
+//
+
 // Name: clibgame/res/texture.hpp
 //
 // Description:
@@ -13,44 +21,20 @@
 #include <string>
 #include <vector>
 
-#include "texable.hpp"
-
 //////////
 // Code //
 
 namespace clibgame {
-    // A class to reapresent an OpenGL texture.
-    class Texture : public clibgame::Texable {
-    private:
-        int width, height;
-        bool original;
-        GLuint id;
+    namespace res {
+        // A struct that contains information about a Texture.
+        struct Texture {
+            int width, height;
+            GLuint id;
 
-        // Cleaning up the texture.
-        void destroy();
-
-    public:
-        // Loading a texture from the disk.
-        Texture(std::string) throw(std::runtime_error);
-
-        // Copy constructor.
-        Texture(const Texture&);
-
-        // Destroying this texture.
-        ~Texture();
-
-        // Some accessors.
-        int getWidth()    const;
-        int getHeight()   const;
-        bool isOriginal() const;
-
-        // Texable
-        GLuint getTextureID() const;
-        std::vector<GLfloat> getTextureCoords() const;
-
-        // Binding this texture.
-        void bind() const;
-    };
+            // Loading a texture from the filesystem.
+            static Texture load(std::string path) throw(std::runtime_error);
+        };
+    }
 }
 
 #endif

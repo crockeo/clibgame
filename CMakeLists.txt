@@ -69,18 +69,18 @@ target_link_libraries(clibgame-ecs clibgame-core)
 # parse asset specification files & precache them on startup.
 
 set(RES_HEADERS
-  src/clibgame/res/manager.cpp
   src/clibgmae/res/texture.hpp
   src/clibgame/res/shader.hpp
   src/clibgame/res/sound.hpp
+  src/clibgame/res/font.hpp
   src/clibgame/res/all.hpp
 )
 
 set(RES_SOURCES
-  src/clibgame/res/manager.cpp
   src/clibgame/res/texture.cpp
   src/clibgame/res/shader.cpp
   src/clibgame/res/sound.cpp
+  src/clibgame/res/font.cpp
 )
 
 add_library(clibgame-res SHARED ${RES_SOURCES})
