@@ -3,6 +3,14 @@
 // Description:
 //   A module to deal with loading and interacting with shaders.
 
+// Name     : clibgame/res/shader.hpp
+// Author(s): Cerek Hillen
+// Init Date: 2016-06-02
+// Edit Date: 2016-06-02
+//
+// Description:
+//   Utilities to load shaders and shader programs from the filesystem.
+
 #ifndef _CLIBGAME_RES_SHADER_HPP_
 #define _CLIBGAME_RES_SHADER_HPP_
 
@@ -15,28 +23,21 @@
 // Code //
 
 namespace clibgame {
-    // Loading a specific type of shader.
-    GLuint loadShader(std::string, GLenum) throw(std::runtime_error);
+    namespace res {
+        typedef GLuint Shader;
+        typedef GLuint ShaderProgram;
 
-    // The shader program class.
-    class Shader {
-    private:
-        bool original;
-        GLuint id;
+        // Loading a single shader from the filesystem.
+        Shader loadShader(std::string path, GLenum kind) throw(std::runtime_error, std::logic_error);
 
-    public:
-        // Loading a shader from a location on disk.
-        Shader(std::string) throw(std::runtime_error);
+        // Linking a shader program from three Shaders (vertex, fragment, and
+        // geometry).
+        ShaderProgram linkShaderProgram(Shader vert, Shader frag, Shader geom) throw(std::runtime_error, std::logic_error);
 
-        // Copying this shader.
-        Shader(const Shader&);
-
-        // Destroying this shader.
-        ~Shader();
-
-        // Getting the ID of this shader.
-        GLuint getShaderID();
-    };
+        // Loading an entire shader program from the file system. Effectively
+        // a nice combination of loadShader(...) and linkShaderProgram(...).
+        ShaderProgram loadShaderProgram(std::string basePath) throw(std::runtime_error);
+    }
 }
 
 #endif

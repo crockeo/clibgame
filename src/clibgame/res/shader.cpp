@@ -4,102 +4,96 @@
 // Includes //
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 //////////
 // Code //
 
-// Loading a specific type of shader.
-GLuint clibgame::loadShader(std::string path, GLenum type) throw(std::runtime_error) {
-    std::ifstream file(path);
-    if (!file.good())
-        throw std::runtime_error("Could not open file " + path + "!");
+namespace clibgame {
+    namespace res {
+        // Loading a single shader from the filesystem.
+        Shader loadShader(std::string path, GLenum kind) throw(std::runtime_error, std::logic_error) {
+            if (kind != GL_VERTEX_SHADER && kind != GL_FRAGMENT_SHADER && kind != GL_GEOMETRY_SHADER)
+                throw std::logic_error("Must pass a valid GLenum -- vertex, fragment, or geometry shader.");
 
-    std::string contents;
-    while (!file.eof()) {
-        if (file.peek() == -1)
-            continue;
-        contents.push_back((char)file.get());
-    }
+            std::ifstream file(path);
+            file.seekg(0, file.end);
+            int len = file.tellg();
+            file.seekg(0, file.beg);
 
-    GLuint shader = glCreateShader(type);
-    if (shader == 0)
-        throw std::runtime_error("Could not allocate shader.");
+            char* contents = new char[len];
+            file.read(contents, len);
+            file.close();
 
-    const char* contentsCStr = contents.c_str();
-    glShaderSource(shader, 1, &contentsCStr, nullptr);
+            Shader shader = glCreateShader(kind);
+            if (shader == 0)
+                throw std::runtime_error("Could not allocate shader.");
 
-    glCompileShader(shader);
+            glShaderSource(shader, 1, &contents, nullptr);
+            glCompileShader(shader);
 
-    GLint compiled;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
-    if (compiled == GL_FALSE) {
-        int len;
-        GLchar log[1024];
-        glGetShaderInfoLog(shader, 1024, &len, log);
-        glDeleteShader(shader);
+            GLint compiled;
+            glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
+            if (compiled == GL_FALSE) {
+                GLchar log[1024];
+                glGetShaderInfoLog(shader, 1024, nullptr, log);
 
-        throw std::runtime_error("Failed to compile shader '" + path + "': \n" + log + "\n");
-    }
+                glDeleteShader(shader);
+                delete[] contents;
 
-    return shader;
-}
+                std::ostringstream str;
+                str << "Failed to compile shader '" << path << "': " << std::endl
+                    << "  " << log;
+                throw std::runtime_error(str.str());
+            }
 
-// Loading a shader from a location on disk.
-clibgame::Shader::Shader(std::string path) throw(std::runtime_error) {
-    auto tryLoadShader = [](std::string path, GLenum type) -> GLuint {
-        GLuint n = 0;
-        try { n = clibgame::loadShader(path, type); }
-        catch (std::runtime_error& err) {
-            std::cerr << err.what() << std::endl;
+            delete[] contents;
+            return shader;
         }
 
-        return n;
-    };
+        // Linking a shader program from three Shaders (vertex, fragment, and
+        // geometry).
+        ShaderProgram linkShaderProgram(Shader vert, Shader frag, Shader geom) throw(std::runtime_error, std::logic_error) {
+            if (vert == 0 || frag == 0)
+                throw std::logic_error("Cannot create a shader program without a vertex shader or fragment shader.");
+            ShaderProgram program = glCreateProgram();
 
-    // Trying to load all of the shaders.
-    GLuint vertShader = tryLoadShader(path + ".vert", GL_VERTEX_SHADER),
-           fragShader = tryLoadShader(path + ".frag", GL_FRAGMENT_SHADER),
-           geomShader = tryLoadShader(path + ".geom", GL_GEOMETRY_SHADER);
+            if (vert != 0) glAttachShader(program, vert);
+            if (frag != 0) glAttachShader(program, frag);
+            if (geom != 0) glAttachShader(program, geom);
 
-    if (vertShader == 0 && fragShader == 0 && geomShader == 0)
-        throw std::runtime_error("No shaders were loaded.");
-    else {
-        this->id = glCreateProgram();
+            glLinkProgram(program);
 
-        if (vertShader != 0) glAttachShader(id, vertShader);
-        if (fragShader != 0) glAttachShader(id, fragShader);
-        if (geomShader != 0) glAttachShader(id, geomShader);
+            GLint linked;
+            glGetProgramiv(program, GL_LINK_STATUS, &linked);
+            if (linked == GL_FALSE) {
+                GLchar log[1024];
+                glGetProgramInfoLog(program, 1024, nullptr, log);
 
-        glBindFragDataLocation(this->id, 0, "out_color");
-        glLinkProgram(this->id);
+                glDeleteProgram(program);
 
-        glDeleteShader(vertShader);
-        glDeleteShader(fragShader);
-        glDeleteShader(geomShader);
+                std::ostringstream str;
+                str << "Failed to link program: " << log;
+                throw std::runtime_error(str.str());
+            }
 
-        int linked;
-        glGetProgramiv(this->id, GL_LINK_STATUS, &linked);
-        if (linked == GL_FALSE) {
-            glDeleteProgram(this->id);
-            throw std::runtime_error("Failed to link shader program.");
+            return program;
         }
 
-        this->original = true;
+        // Loading an entire shader program from the file system. Effectively
+        // a nice combination of loadShader(...) and linkShaderProgram(...).
+        ShaderProgram loadShaderProgram(std::string basePath) throw(std::runtime_error) {
+            Shader vert = loadShader(basePath + ".vert", GL_VERTEX_SHADER),
+                   frag = loadShader(basePath + ".frag", GL_FRAGMENT_SHADER),
+                   geom = loadShader(basePath + ".geom", GL_GEOMETRY_SHADER);
+
+            ShaderProgram program = linkShaderProgram(vert, frag, geom);
+
+            glDeleteShader(vert);
+            glDeleteShader(frag);
+            glDeleteShader(geom);
+
+            return program;
+        }
     }
 }
-
-
-// Copying this shader.
-clibgame::Shader::Shader(const Shader& shader) {
-    this->original = false;
-    this->id       = shader.id;
-}
-
-// Destroying this shader.
-clibgame::Shader::~Shader() {
-    if (this->original)
-        glDeleteProgram(this->id);
-}
-
-// Getting the ID of this shader.
-GLuint clibgame::Shader::getShaderID() { return this->id; }
