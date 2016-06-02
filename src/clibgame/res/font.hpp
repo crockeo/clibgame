@@ -14,49 +14,21 @@
 // Code //
 
 namespace clibgame {
-    // The global instance of the FreeType font library.
-    class FontLib {
-    private:
-        static std::unique_ptr<FT_Library> ft;
+    namespace res {
+        // A font from the filesystem.
+        struct Font {
+            FT_Face face;
+            int pnt;
 
-    public:
-        // Getting the global FT_Library instance.
-        static FT_Library instance();
-    };
+            // Loading a Font from a given location on disk.
+            static Font load(std::string path, int pnt) throw(std::runtime_error);
 
-    // A class to represent a type of font.
-    class Font {
-    private:
-        FT_Face fontFace;
-        bool original;
-        int pnt;
-
-    public:
-        // Loading a font from a location on disk.
-        Font(std::string, int) throw(std::runtime_error);
-
-        // Copy constructor.
-        Font(const Font&);
-
-        // Destroying this font.
-        ~Font();
-
-        // Deleting the assignment operator.
-        Font& operator=(const Font&) = delete;
-
-        // Determining the display width of a string.
-        float displayWidth(std::string) const;
-
-        // Determining the display height of a string.
-        float displayHeight(std::string) const;
-
-        // Getting the FT_Face of this font.
-        FT_Face getFontFace() const;
-
-        // Getting the height of this font - it will always be the same as
-        // displayWidth; only an 'int' instead of a 'float'.
-        int getPnt() const;
-    };
+            // Getting the size of a render for a given string.
+            float displayWidth(std::string str) const;
+            float displayHeight(std::string str) const;
+            std::tuple<float, float> displaySize(std::string str) const;
+        };
+    }
 }
 
 #endif
