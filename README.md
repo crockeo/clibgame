@@ -18,6 +18,17 @@ $ make install # OPTIONAL - If you want to install the libraries / headers.
 If you choose to uninstall the library, the `uninstall.sh` in this directory
 removes all items added from the `install_manifest.txt`.
 
+### Library Components
+
+**core** - The core library. Contains most general-use features that don't have
+any non-standard library dependencies.
+
+**ecs** - An Entity Component System implementation. Not in *core* because it's
+very single-purpose.
+
+**res** - Base resource loading -- textures, shaders, sounds. Utilities using
+these (e.g. animations, spritesheets, and sprites) are defined elsewhere.
+
 ### Usage
 
 For documentation, check out the wiki section of this GitHub repo. Alternatively
