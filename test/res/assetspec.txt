@@ -1,9 +1,0 @@
-texture res/test.png res/test.png
-
-animation testanim res/test.png 2 2 0.5 true
-animation_f boundanim res/test.png 2 2 0.5 true 0 2
-
-shader res/fontshader res/fontshader
-shader res/test res/test
-
-font res/testfont.ttf res/testfont.ttf 24
