@@ -66,24 +66,25 @@ namespace clibgame {
         ////
         // AdvancedManager
 
-        //AdvancedManager(Manager& manager);
+        AdvancedManager::AdvancedManager(Manager& manager) :
+                manager(manager) { }
 
-        //// Loading a given resource.
-        //virtual void loadResource(std::string path, ResourceType type)
-                //throw(std::runtime_error, std::logic_error);
+        // Loading a given resource.
+        void AdvancedManager::loadResource(std::string path, ResourceType type)
+                throw(std::runtime_error, std::logic_error) {
+            manager.loadResource(path, type);
+        }
 
-        //// Unloading a resource.
-        //virtual void unloadResource(std::string path, ResourceType type)
-                //throw(std::runtime_error, std::logic_error);
+        // Unloading a resource.
+        void AdvancedManager::unloadResource(std::string path, ResourceType type)
+                throw(std::runtime_error, std::logic_error) {
+            manager.unloadResource(path, type);
+        }
 
-        //// Getting a raw pointer to a loaded resource.
-        //virtual const void* getResource(std::string path)
-                //throw(std::logic_error);
-
-        //// Typed calls to getResource.
-        //ShaderProgram getShader(std::string path) throw(std::logic_error);
-        //Texture getTexture(std::string path) throw(std::logic_error);
-        //// Sound getSound(std::string path) throw(std::logic_error); TODO
-        //Font getFont(std::string path) throw(std::logic_error);
+        // Getting a raw pointer to a loaded resource.
+        const void* AdvancedManager::getResource(std::string path) const
+                throw(std::logic_error) {
+            return manager.getResource(path);
+        }
     }
 }

@@ -102,11 +102,12 @@ namespace clibgame {
             virtual const void* getResource(std::string path) const
                     throw(std::logic_error);
 
-            // Typed calls to getResource.
-            ShaderProgram getShader(std::string path) throw(std::logic_error);
-            Texture getTexture(std::string path) throw(std::logic_error);
-            // Sound getSound(std::string path) throw(std::logic_error); TODO
-            Font getFont(std::string path) throw(std::logic_error);
+            // Getting a typed resource.
+            template <typename T>
+            T getTypedResource(std::string path) const
+                    throw(std::logic_error) {
+                return *dynamic_cast<T*>(getResource(path));
+            }
         };
     }
 }
