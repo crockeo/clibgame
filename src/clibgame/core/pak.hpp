@@ -38,6 +38,9 @@ namespace clibgame {
             // be.
             virtual void closeFile() throw(std::logic_error) = 0;
 
+            // Checking if this Pak contains a given file.
+            virtual bool hasFile(std::string) const = 0;
+
             // Checking if a file is open.
             virtual bool isOpen() const = 0;
         };

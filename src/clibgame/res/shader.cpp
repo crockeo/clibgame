@@ -11,21 +11,20 @@
 
 namespace clibgame {
     namespace res {
-        // Loading a single shader from the filesystem.
-        Shader loadShader(std::string path, GLenum kind) throw(std::runtime_error, std::logic_error) {
-            if (kind != GL_VERTEX_SHADER && kind != GL_FRAGMENT_SHADER && kind != GL_GEOMETRY_SHADER)
-                throw std::logic_error("Must pass a valid GLenum -- vertex, fragment, or geometry shader.");
+        ////
+        // ShaderProgram
 
-            std::ifstream file(path);
-            file.seekg(0, file.end);
-            int len = file.tellg();
-            file.seekg(0, file.beg);
+        // Loading a shader from an istream.
+        GLuint ShaderProgram::loadShader(std::istream& input, GLenum kind) const
+                throw(std::runtime_error) {
+            input.seekg(0, input.end);
+            int len = input.tellg();
+            input.seekg(0, input.beg);
 
             char* contents = new char[len];
-            file.read(contents, len);
-            file.close();
+            input.read(contents, len);
 
-            Shader shader = glCreateShader(kind);
+            GLuint shader = glCreateShader(kind);
             if (shader == 0)
                 throw std::runtime_error("Could not allocate shader.");
 
@@ -42,58 +41,77 @@ namespace clibgame {
                 delete[] contents;
 
                 std::ostringstream str;
-                str << "Failed to compile shader '" << path << "': " << std::endl
+                str << "Failed to compile shader: " << std::endl
                     << "  " << log;
                 throw std::runtime_error(str.str());
             }
 
-            delete[] contents;
             return shader;
         }
 
-        // Linking a shader program from three Shaders (vertex, fragment, and
-        // geometry).
-        ShaderProgram linkShaderProgram(Shader vert, Shader frag, Shader geom) throw(std::runtime_error, std::logic_error) {
-            if (vert == 0 || frag == 0)
-                throw std::logic_error("Cannot create a shader program without a vertex shader or fragment shader.");
-            ShaderProgram program = glCreateProgram();
+        // Getting the ID of this ShaderProgram.
+        GLuint ShaderProgram::id() const { return _id; }
 
-            if (vert != 0) glAttachShader(program, vert);
-            if (frag != 0) glAttachShader(program, frag);
-            if (geom != 0) glAttachShader(program, geom);
+        // Loading a Resource from a variety of places.
+        void ShaderProgram::load(clibgame::core::Pak& pak, std::string path)
+                throw(std::runtime_error) {
+            GLuint vert = 0,
+                   frag = 0,
+                   geom = 0;
 
-            glLinkProgram(program);
+            if (pak.hasFile(path + ".vert")) {
+                vert = loadShader(pak.openFile(path + ".vert"), GL_VERTEX_SHADER);
+                pak.closeFile();
+            }
 
-            GLint linked;
-            glGetProgramiv(program, GL_LINK_STATUS, &linked);
-            if (linked == GL_FALSE) {
-                GLchar log[1024];
-                glGetProgramInfoLog(program, 1024, nullptr, log);
+            if (pak.hasFile(path + ".frag")) {
+                frag = loadShader(pak.openFile(path + ".frag"), GL_VERTEX_SHADER);
+                pak.closeFile();
+            }
 
-                glDeleteProgram(program);
+            if (pak.hasFile(path + ".geom")) {
+                geom = loadShader(pak.openFile(path + ".geom"), GL_VERTEX_SHADER);
+                pak.closeFile();
+            }
 
+            if (vert == 0 || frag == 0) {
                 std::ostringstream str;
-                str << "Failed to link program: " << log;
+                str << "Shader program '" << path << "' does not have either a vertex shader or a fragment shader.";
                 throw std::runtime_error(str.str());
             }
 
-            return program;
-        }
+            _id = glCreateProgram();
+            glAttachShader(_id, vert);
+            glAttachShader(_id, frag);
+            glAttachShader(_id, geom);
 
-        // Loading an entire shader program from the file system. Effectively
-        // a nice combination of loadShader(...) and linkShaderProgram(...).
-        ShaderProgram loadShaderProgram(std::string basePath) throw(std::runtime_error) {
-            Shader vert = loadShader(basePath + ".vert", GL_VERTEX_SHADER),
-                   frag = loadShader(basePath + ".frag", GL_FRAGMENT_SHADER),
-                   geom = loadShader(basePath + ".geom", GL_GEOMETRY_SHADER);
-
-            ShaderProgram program = linkShaderProgram(vert, frag, geom);
+            glLinkProgram(_id);
 
             glDeleteShader(vert);
             glDeleteShader(frag);
             glDeleteShader(geom);
 
-            return program;
+            GLint linked;
+            glGetProgramiv(_id, GL_LINK_STATUS, &linked);
+            if (linked == GL_FALSE) {
+                GLchar log[1024];
+                glGetProgramInfoLog(_id, 1024, nullptr, log);
+
+                glDeleteProgram(_id);
+
+                std::ostringstream str;
+                str << "Failed to link _id: " << log;
+                throw std::runtime_error(str.str());
+            }
         }
+
+        // Disposing of an already-loaded resource.
+        void ShaderProgram::dispose()
+                throw(std::runtime_error) {
+            glDeleteProgram(_id);
+        }
+
+        // Checking if this resource has been loaded.
+        bool ShaderProgram::loaded() const { return _loaded; }
     }
 }

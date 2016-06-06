@@ -19,24 +19,42 @@
 #include <GL/glew.h>
 #include <string>
 
+#include "../core/pak.hpp"
+#include "resource.hpp"
+
 //////////
 // Code //
 
 namespace clibgame {
     namespace res {
-        typedef GLuint Shader;
-        typedef GLuint ShaderProgram;
+        // A class to represent OpenGL shader programs. Automatically attempts
+        // to load the .vert, .frag, and .geom shaders when loading.
+        class ShaderProgram : public Resource {
+        private:
+            GLuint _id;
+            bool _loaded;
 
-        // Loading a single shader from the filesystem.
-        Shader loadShader(std::string path, GLenum kind) throw(std::runtime_error, std::logic_error);
+            // Loading a shader from an istream.
+            GLuint loadShader(std::istream& input, GLenum kind) const
+                    throw(std::runtime_error);
 
-        // Linking a shader program from three Shaders (vertex, fragment, and
-        // geometry).
-        ShaderProgram linkShaderProgram(Shader vert, Shader frag, Shader geom) throw(std::runtime_error, std::logic_error);
+        public:
+            ShaderProgram();
 
-        // Loading an entire shader program from the file system. Effectively
-        // a nice combination of loadShader(...) and linkShaderProgram(...).
-        ShaderProgram loadShaderProgram(std::string basePath) throw(std::runtime_error);
+            // Getting the ID of this ShaderProgram.
+            GLuint id() const;
+
+            // Loading a Resource from a variety of places.
+            virtual void load(clibgame::core::Pak& pak, std::string path)
+                    throw(std::runtime_error);
+
+            // Disposing of an already-loaded resource.
+            virtual void dispose()
+                    throw(std::runtime_error);
+
+            // Checking if this resource has been loaded.
+            virtual bool loaded() const;
+        };
     }
 }
 
