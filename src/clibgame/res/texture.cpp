@@ -166,19 +166,46 @@ std::tuple<GLuint, int, int> loadPNG(std::string path) {
 
 namespace clibgame {
     namespace res {
-        // Loading a texture from the filesystem.
-        Texture Texture::load(std::string path) throw(std::runtime_error) {
-            Texture t;
+        ////
+        // Texture
 
-            auto png = loadPNG(path);
-            if (png == BAD_RETURN)
-                throw std::runtime_error("Failed to load PNG from '" + path + "'!");
+        Texture::Texture() :
+                _width(0), _height(0),
+                _loaded(false),
+                _id(0) { }
 
-            t.id     = std::get<0>(png);
-            t.width  = std::get<1>(png);
-            t.height = std::get<2>(png);
+        // Getting the size of the texture.
+        int Texture::getWidth() const { return _width; }
+        int Texture::getHeight() const { return _height; }
 
-            return t;
+        // Loading a Resource from a variety of places.
+        void Texture::load(clibgame::core::Pak& pak, std::string path)
+                throw(std::runtime_error) {
+            _loaded = true;
         }
+
+        // Disposing of an already-loaded resource.
+        void Texture::dispose()
+                throw(std::runtime_error) {
+            glDeleteTextures(1, &_id);
+        }
+
+        // Checking if this resource has been loaded.
+        bool Texture::loaded() const { return _loaded; }
+
+        //// Loading a texture from the filesystem.
+        //Texture Texture::load(std::string path) throw(std::runtime_error) {
+            //Texture t;
+
+            //auto png = loadPNG(path);
+            //if (png == BAD_RETURN)
+                //throw std::runtime_error("Failed to load PNG from '" + path + "'!");
+
+            //t.id     = std::get<0>(png);
+            //t.width  = std::get<1>(png);
+            //t.height = std::get<2>(png);
+
+            //return t;
+        //}
     }
 }

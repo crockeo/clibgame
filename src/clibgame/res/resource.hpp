@@ -9,6 +9,13 @@
 #ifndef _CLIBGAME_RES_RESOURCE_HPP_
 #define _CLIBGAME_RES_RESOURCE_HPP_
 
+//////////////
+// Includes //
+#include "../core/pak.hpp"
+
+//////////
+// Code //
+
 namespace clibgame {
     namespace res {
         // The (entirely virtual) class that defines the Resource API.

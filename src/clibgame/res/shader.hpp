@@ -1,12 +1,7 @@
-// Name: clibgame/res/shader.hpp
-//
-// Description:
-//   A module to deal with loading and interacting with shaders.
-
 // Name     : clibgame/res/shader.hpp
 // Author(s): Cerek Hillen
 // Init Date: 2016-06-02
-// Edit Date: 2016-06-02
+// Edit Date: 2016-06-06
 //
 // Description:
 //   Utilities to load shaders and shader programs from the filesystem.
@@ -19,7 +14,6 @@
 #include <GL/glew.h>
 #include <string>
 
-#include "../core/pak.hpp"
 #include "resource.hpp"
 
 //////////
