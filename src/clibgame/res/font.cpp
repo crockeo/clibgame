@@ -39,29 +39,35 @@ namespace clibgame {
         ////
         // Font
 
-        // Loading a Font from a given location on disk.
-        Font Font::load(std::string path, int pnt) throw(std::runtime_error) {
-            Font font;
+        Font::Font()
+                _loaded(false) { }
 
-            font.face = nullptr;
-            if (FT_New_Face(FontLib::instance(), path.c_str(), 0, &font.face))
+        // Loading a Resource from a variety of places.
+        virtual void load(clibgame::core::Pak& pak, std::string path)
+                throw(std::runtime_error) {
+            // TODO: Find out how to move this over to a FILE* directly.
+            if (FT_New_Face(FontLib::instance(), path.c_str(), 0, &face))
                 throw std::runtime_error("Failed to load font from '" + path + "'!");
 
-            FT_Set_Pixel_Sizes(font.face, 0, pnt);
-            font.pnt = pnt;
-
-            return font;
+            FT_Set_Pixel_Sizes(face, 0, pnt);
+            pnt = pnt;
         }
+
+        // Disposing of an already-loaded resource.
+        virtual void dispose()
+                throw(std::runtime_error) {
+            // TODO: Dispose of this.
+        }
+
+        // Checking if this resource has been loaded.
+        bool Font::loaded() const { return _loaded; }
 
         // Getting the size of a render for a given string.
         float Font::displayWidth(std::string str) const {
-            // TODO: Return display width for a string.
-            return 0.f;
+
         }
 
-        float Font::displayHeight(std::string str) const {
-            return pnt;
-        }
+        float Font::displayHeight(std::string str) const { return _pnt; }
 
         std::tuple<float, float> Font::displaySize(std::string str) const {
             return std::make_tuple(displayWidth(str), displayHeight(str));
