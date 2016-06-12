@@ -27,28 +27,35 @@
 
 namespace clibgame {
     namespace core {
-        // The abstract definition of a Pak -- something that can provide a
+        // A unified Pak API which other Paks can implement.
         struct Pak {
             virtual ~Pak() { }
 
-            // Opening a file and returning a std::ifstream& to its location.
-            virtual std::istream& openFile(std::string path) throw(std::runtime_error, std::logic_error) = 0;
+            // Checking if a given file exists within the Pak.
+            virtual bool hasFile(std::string path) const = 0;
 
-            // Closing a file -- should close the opened std::ifstream& if need
-            // be.
-            virtual void closeFile() throw(std::logic_error) = 0;
+            // 'Opening' a file and providing a FILE pointer to is location.
+            virtual FILE* openFile(std::string path, std::string options)
+                    throw(std::runtime_error, std::logic_error) = 0;
 
-            // Checking if this Pak contains a given file.
-            virtual bool hasFile(std::string) const = 0;
+            // Opening a file for non-binary reading.
+            virtual FILE* openFile(std::string path) {
+                return openFile(path, "r");
+            }
 
-            // Checking if a file is open.
+            // Closing the currently-open file.
+            virtual void closeFile()
+                    throw(std::logic_error) = 0;
+
+            // Checking if a file is currently open.
             virtual bool isOpen() const = 0;
         };
 
-        // A Pak that's really just an API to open files from the filesystem.
+        // A Pak designed to emulate the functionality of a 'real' Pak by
+        // providing an API directly to the filesystem instead.
         class FileSystemPak : public Pak {
         private:
-            std::ifstream stream;
+            FILE* fp;
             bool open;
 
         public:
@@ -59,14 +66,18 @@ namespace clibgame {
 
             ~FileSystemPak();
             
-            // Opening a file and returning a std::ifstream& to its location.
-            virtual std::istream& openFile(std::string path) throw(std::runtime_error, std::logic_error);
+            // Checking if a given file exists within the Pak.
+            virtual bool hasFile(std::string path) const;
 
-            // Closing a file -- should close the opened std::ifstream& if need
-            // be.
-            virtual void closeFile() throw(std::logic_error);
+            // 'Opening' a file and providing a FILE pointer to is location.
+            virtual FILE* openFile(std::string path, std::string options)
+                    throw(std::runtime_error, std::logic_error);
 
-            // Checking if a file is open.
+            // Closing the currently-open file.
+            virtual void closeFile()
+                    throw(std::logic_error);
+
+            // Checking if a file is currently open.
             virtual bool isOpen() const;
         };
 
@@ -78,28 +89,11 @@ namespace clibgame {
             int length;
         };
 
-        // A class that wraps around a std::istream to provide an artificial
-        // length to the reader.
-        class PakReader : public std::istream {
-        private:
-            std::istream& reader;
-            int length;
-
-        public:
-            PakReader(const PakReader&) = delete;
-            PakReader& operator=(const PakReader&) = delete;
-
-            PakReader(std::istream& reader, int len);
-
-            // Checking if the PakReader has ended.
-            virtual bool eof() const;
-        };
-
         // An API for opening files from a real Pak file.
         class RealPak : public Pak {
         private:
             std::unordered_map<std::string, FileSpec> files;
-            std::ifstream reader;
+            FILE* fp;
             bool open;
 
             // Reading in from the std::ifstream to populate the files object.
@@ -109,21 +103,31 @@ namespace clibgame {
             RealPak(const RealPak&) = delete;
             RealPak& operator=(const RealPak&) = delete;            
 
+            RealPak(const char* path);
             RealPak(std::string path);
 
-            // Opening a file and returning a std::ifstream& to its location.
-            virtual std::istream& openFile(std::string path) throw(std::logic_error);
+            // Constructing a new RealPak file to the 'outPath' from every file
+            // listed in 'paths'.
+            static void construct(std::string outPath, std::vector<std::string> paths) throw(std::runtime_error);
 
-            // Closing a file -- should close the opened std::ifstream& if need
-            // be.
-            virtual void closeFile() throw(std::logic_error);
+            // Validating that a .pak file at least *seems* to be structured
+            // properly.
+            static bool validate(std::string pakPath);
 
-            // Checking if a file is open.
+            // Checking if a given file exists within the Pak.
+            virtual bool hasFile(std::string path) const;
+
+            // 'Opening' a file and providing a FILE pointer to is location.
+            virtual FILE* openFile(std::string path, std::string options)
+                    throw(std::runtime_error, std::logic_error);
+
+            // Closing the currently-open file.
+            virtual void closeFile()
+                    throw(std::logic_error);
+
+            // Checking if a file is currently open.
             virtual bool isOpen() const;
         };
-
-        // Constructing a PAK file from a vector of files on the filesystem.
-        void constructPakFile(std::string outPath, std::vector<std::string> paths) throw(std::runtime_error);
     }
 }
 

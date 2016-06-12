@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
         fromPaths.push_back(std::string(argv[i]));
 
     try {
-        clibgame::core::constructPakFile(toPath, fromPaths);
+        clibgame::core::RealPak::construct(toPath, fromPaths);
     } catch (const std::runtime_error& e) {
         std::cerr << "!! FAILED TO CONSTRUCT PAK FILE !!" << std::endl
                   << "  " << e.what() << std::endl;
