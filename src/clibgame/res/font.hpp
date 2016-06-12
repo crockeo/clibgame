@@ -22,6 +22,7 @@ namespace clibgame {
             int _pnt;
 
         public:
+            Font(int pnt);
             Font();
 
             // Loading a Resource from a variety of places.
@@ -43,6 +44,9 @@ namespace clibgame {
             // Accessors.
             const FT_Face face() const;
             int pnt() const;
+
+            // Setting the point of this font.
+            void setPnt(int pnt);
         };
     }
 }

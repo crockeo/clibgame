@@ -49,6 +49,10 @@ namespace clibgame {
             return shader;
         }
 
+        ShaderProgram::ShaderProgram() :
+                _id(0),
+                _loaded(false) { }
+
         // Getting the ID of this ShaderProgram.
         GLuint ShaderProgram::id() const { return _id; }
 
