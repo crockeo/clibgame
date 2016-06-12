@@ -20,6 +20,8 @@ namespace clibgame {
     namespace res {
         // The (entirely virtual) class that defines the Resource API.
         struct Resource {
+            virtual ~Resource() { }
+
             // Loading a Resource from a variety of places.
             virtual void load(clibgame::core::Pak& pak, std::string path)
                     throw(std::runtime_error) = 0;

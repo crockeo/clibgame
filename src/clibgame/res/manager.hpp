@@ -42,7 +42,7 @@ namespace clibgame {
                     throw(std::runtime_error, std::logic_error) = 0;
 
             // Unloading a resource.
-            virtual void unloadResource(std::string path, ResourceType type)
+            virtual void unloadResource(std::string path)
                     throw(std::runtime_error, std::logic_error) = 0;
 
             // Getting a raw pointer to a loaded resource.
@@ -56,7 +56,7 @@ namespace clibgame {
         // An implementation of a Manager that works off of a native Pak.
         class PakManager : public Manager {
         private:
-            std::unordered_map<std::string, void*> resources;
+            std::unordered_map<std::string, Resource*> resources;
             core::Pak& pak;
 
         public:
@@ -70,7 +70,7 @@ namespace clibgame {
                     throw(std::runtime_error, std::logic_error);
 
             // Unloading a resource.
-            virtual void unloadResource(std::string path, ResourceType type)
+            virtual void unloadResource(std::string path)
                     throw(std::runtime_error, std::logic_error);
 
             // Getting a raw pointer to a loaded resource.
@@ -95,7 +95,7 @@ namespace clibgame {
                     throw(std::runtime_error, std::logic_error);
 
             // Unloading a resource.
-            virtual void unloadResource(std::string path, ResourceType type)
+            virtual void unloadResource(std::string path)
                     throw(std::runtime_error, std::logic_error);
 
             // Getting a raw pointer to a loaded resource.
