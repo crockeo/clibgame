@@ -15,14 +15,14 @@ namespace clibgame {
         // ShaderProgram
 
         // Loading a shader from an istream.
-        GLuint ShaderProgram::loadShader(std::istream& input, GLenum kind) const
+        GLuint ShaderProgram::loadShader(FILE* file, GLenum kind) const
                 throw(std::runtime_error) {
-            input.seekg(0, input.end);
-            int len = input.tellg();
-            input.seekg(0, input.beg);
+            fseek(file, 0, SEEK_END);
+            int len = ftell(file);
+            fseek(file, 0, SEEK_SET);
 
             char* contents = new char[len];
-            input.read(contents, len);
+            fread(contents, 1, len, file);
 
             GLuint shader = glCreateShader(kind);
             if (shader == 0)

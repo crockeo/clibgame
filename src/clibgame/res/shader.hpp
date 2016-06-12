@@ -29,7 +29,7 @@ namespace clibgame {
             bool _loaded;
 
             // Loading a shader from an istream.
-            GLuint loadShader(std::istream& input, GLenum kind) const
+            GLuint loadShader(FILE* file, GLenum kind) const
                     throw(std::runtime_error);
 
         public:
