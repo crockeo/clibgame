@@ -4,7 +4,14 @@
 // Printing help for the application.
 void printHelp() {
     std::cout << "Proper usage:" << std::endl
-              << "  pakker <target_file.pak> <source_file_1.xxx> ... <source_file_n.xxx>" << std::endl;
+              << "  pakker <mode> ..." << std::endl
+              << std::endl
+              << "  pakker validate <target_file.pak>" << std::endl
+              << std::endl
+              << "  pakker pak" << std::endl
+              << "         <target_file.pak>" << std::endl
+              << "         <source_file_1.xxx>" << std::endl
+              << "     ... <source_file_n.xxx>" << std::endl;
 }
 
 int main(int argc, char** argv) {

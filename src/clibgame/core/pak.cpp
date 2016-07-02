@@ -2,7 +2,8 @@
 
 //////////////
 // Includes //
-#include <stdlib.h>
+#include <cstring>
+#include <cstdlib>
 
 //////////
 // Code //
@@ -62,96 +63,115 @@ namespace clibgame {
         ////
         // RealPak
 
-        // Reading in from the std::ifstream to populate the files object.
-        bool RealPak::initFiles() {
+        // Reading the headers in from the filesystem.
+        void RealPak::readHeaders()
+                throw(std::runtime_error) {
+            if (fp == nullptr)
+                throw std::runtime_error("Cannot read from null file pointer.");
 
+            fseek(fp, 0, SEEK_END);
+            int len = ftell(fp);
+            fseek(fp, 0, SEEK_SET);
+
+            char header[4];
+            fread(header, 4, 4, fp);
+            if (strcmp(header, "CPAK") != 0)
+                throw std::runtime_error("Invalid .pak file.");
+
+            uint16_t items;
+            fread(&items, 2, 2, fp);
+
+            char path[2048];
+            uint32_t offset, length;
+            for (int i = 0; i < items; i++) {
+            }
         }
 
         RealPak::RealPak(const char* path) {
             fp = fopen(path, "r");
+            open = false;
+
+            readHeaders();
         }
 
         RealPak::RealPak(std::string path) :
                 RealPak(path.c_str()) { }
 
+        RealPak::~RealPak() {
+            fclose(fp);
+        }
+
         // Constructing a new RealPak file to the 'outPath' from every file
         // listed in 'paths'.
         void RealPak::construct(std::string outPath, std::vector<std::string> paths)
                 throw(std::runtime_error) {
+            FILE* out = fopen(outPath.c_str(), "w");
 
+            std::unordered_map<std::string, FileSpec> files;
+
+            char *bytes = nullptr;
+            int largest = -1;
+            int len;
+            for (std::string path: paths) {
+                FILE* file = fopen(path.c_str(), "r");
+
+                // Getting the file length.
+                fseek(file, 0, SEEK_END);
+                len = ftell(file);
+                fseek(file, 0, SEEK_SET);
+
+                if (len > largest) {
+                    delete[] bytes;
+                    bytes = new char[len];
+                }
+
+                fread(bytes, 1, len, file);
+                fwrite(bytes, 1, len, out);
+            }
+
+            fclose(out);
         }
 
         // Validating that a .pak file at least *seems* to be structured
         // properly.
         bool RealPak::validate(std::string pakPath) {
-
+            try {
+                RealPak pak(pakPath);
+                return true;
+            } catch (std::runtime_error) {
+                return false;
+            }
         }
 
         // Checking if a given file exists within the Pak.
         bool RealPak::hasFile(std::string path) const {
-
+            return files.find(path) != files.end();
         }
 
         // 'Opening' a file and providing a FILE pointer to is location.
         FILE* RealPak::openFile(std::string path, std::string options)
                 throw(std::runtime_error, std::logic_error) {
-            // TODO
-            return nullptr;
+            if (isOpen())
+                throw std::logic_error("Cannot open a second file.");
+            auto it = files.find(path);
+            if (it == files.end())
+                throw std::runtime_error("RealPak does not contain a file with that name.");
+            fseek(fp, std::get<1>(*it).offset, SEEK_SET);
+            return fp;
         }
 
         // Closing the currently-open file.
         void RealPak::closeFile()
                 throw(std::logic_error) {
-
+            if (!isOpen())
+                throw std::logic_error("There is no open file to close.");
+            fseek(fp, 0, SEEK_SET);
+            open = false;
         }
 
         // Checking if a file is currently open.
         bool RealPak::isOpen() const {
-
+            return open;
         }
-
-        //////
-        //// PakReader
-
-        //////
-        //// RealPak
-
-        //// Reading in from the std::ifstream to populate the files object.
-        //bool RealPak::initFiles() {
-            //// TODO: Populate files after I decide on an asset spec.
-        //}
-
-        //RealPak::RealPak(std::string path) :
-                //files(),
-                //reader(path),
-                //open(false) {
-            //if (!initFiles())
-                //throw std::runtime_error("Failed to initialize .pak file.");
-        //}
-
-        //// Opening a file and returning a std::ifstream& to its location.
-        //std::istream& RealPak::openFile(std::string path) throw(std::logic_error) {
-            //if (isOpen())
-                //throw std::logic_error("Cannot open a file when another is already open.");
-            //// TODO: Open file.
-        //}
-
-        //// Closing a file -- should close the opened std::ifstream& if need
-        //// be.
-        //void RealPak::closeFile() throw(std::logic_error) {
-            //if (!open)
-                //throw std::logic_error("Cannot close a non-open file.");
-            //open = false;
-        //}
-
-        //// Checking if a file is open.
-        //bool RealPak::isOpen() const { return open; }
-
-        //////
-        //// Global Functions
-
-        //// Constructing a PAK file from a vector of files on the filesystem.
-        //void constructPakFile(std::string outPath, std::vector<std::string> paths) throw(std::runtime_error) {
-        //}
     }
 }

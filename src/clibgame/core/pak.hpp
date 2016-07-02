@@ -83,10 +83,9 @@ namespace clibgame {
 
         // An organization of file data to be used when accessing information.
         struct FileSpec {
-            std::string originalName;
             std::string path;
-            int offset;
-            int length;
+            uint32_t offset;
+            uint32_t length;
         };
 
         // An API for opening files from a real Pak file.
@@ -96,8 +95,9 @@ namespace clibgame {
             FILE* fp;
             bool open;
 
-            // Reading in from the std::ifstream to populate the files object.
-            bool initFiles();
+            // Reading the headers in from the filesystem.
+            void readHeaders()
+                    throw(std::runtime_error);
 
         public:
             RealPak(const RealPak&) = delete;
@@ -105,6 +105,8 @@ namespace clibgame {
 
             RealPak(const char* path);
             RealPak(std::string path);
+
+            ~RealPak();
 
             // Constructing a new RealPak file to the 'outPath' from every file
             // listed in 'paths'.

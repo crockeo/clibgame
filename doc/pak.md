@@ -10,3 +10,7 @@ I'm restructuring the `Pak` struct (and its derived classes) to return `FILE*`
 as well.
 
 As such, each resource needs to be modified slightly to make use of this change.
+
+### Pak File Format
+
+...
