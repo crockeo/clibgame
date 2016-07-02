@@ -22,7 +22,7 @@ namespace clibgame {
             if (isOpen())
                 closeFile();
         }
-        
+
         // Checking if a given file exists within the Pak.
         bool FileSystemPak::hasFile(std::string path) const {
             FILE* f = fopen(path.c_str(), "r");
@@ -69,21 +69,34 @@ namespace clibgame {
             if (fp == nullptr)
                 throw std::runtime_error("Cannot read from null file pointer.");
 
-            fseek(fp, 0, SEEK_END);
-            int len = ftell(fp);
-            fseek(fp, 0, SEEK_SET);
-
             char header[4];
-            fread(header, 4, 4, fp);
+            fread(header, 1, 4, fp);
             if (strcmp(header, "CPAK") != 0)
                 throw std::runtime_error("Invalid .pak file.");
 
             uint16_t items;
-            fread(&items, 2, 2, fp);
+            fread(&items, 2, 1, fp);
 
+            std::unordered_map<std::string, FileSpec> specs;
+            std::string cppPath;
             char path[2048];
             uint32_t offset, length;
             for (int i = 0; i < items; i++) {
+                char c = '\0';
+                int j;
+                for (j = 0; j < 2048 && c != '|'; j++) {
+                    c = fgetc(fp);
+                    path[j] = c;
+                }
+                path[j] = '\0';
+
+                fread(&offset, 4, 1, fp);
+                fread(&length, 4, 1, fp);
+
+                cppPath = std::string(path);
+                specs.insert(std::make_pair(cppPath, FileSpec {
+                    cppPath, offset, length
+                }));
             }
         }
 
