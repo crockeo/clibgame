@@ -13,4 +13,11 @@ As such, each resource needs to be modified slightly to make use of this change.
 
 ### Pak File Format
 
-...
+The literal string `CPAK` (to ensure that we're looking at an intentionally
+pakked file). `<2-byte integer>`, the number of files pakked away. Then for each
+pakked away file:
+
+* A path (up to 2047 characters long).
+* A `|` character to denote its end.
+* 4-byte integer to define its offset.
+* 4-byte integer to define its length.
