@@ -6,7 +6,7 @@ if [ -f "$installPath" ]; then
     while read p; do
         rm $p
     done < $installPath
-    rm "$installPath"
+    mv "$installPath" "$installPath""_OLD"
 else
     echo "Cannot uninstall: $installPath does not exist."
 fi
