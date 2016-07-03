@@ -65,7 +65,7 @@ namespace clibgame {
             FileSystemPak();
 
             ~FileSystemPak();
-            
+
             // Checking if a given file exists within the Pak.
             virtual bool hasFile(std::string path) const;
 
@@ -101,7 +101,7 @@ namespace clibgame {
 
         public:
             RealPak(const RealPak&) = delete;
-            RealPak& operator=(const RealPak&) = delete;            
+            RealPak& operator=(const RealPak&) = delete;
 
             RealPak(const char* path);
             RealPak(std::string path);
@@ -110,11 +110,16 @@ namespace clibgame {
 
             // Constructing a new RealPak file to the 'outPath' from every file
             // listed in 'paths'.
-            static void construct(std::string outPath, std::vector<std::string> paths) throw(std::runtime_error);
+            static void construct(std::string outPath, std::vector<std::string> paths)
+                    throw(std::runtime_error, std::logic_error);
 
             // Validating that a .pak file at least *seems* to be structured
             // properly.
             static bool validate(std::string pakPath);
+
+            // Getting file info from a contained file.
+            FileSpec fileInfo(std::string path) const
+                    throw(std::logic_error);
 
             // Checking if a given file exists within the Pak.
             virtual bool hasFile(std::string path) const;

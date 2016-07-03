@@ -117,31 +117,66 @@ namespace clibgame {
         // Constructing a new RealPak file to the 'outPath' from every file
         // listed in 'paths'.
         void RealPak::construct(std::string outPath, std::vector<std::string> paths)
-                throw(std::runtime_error) {
-            FILE* out = fopen(outPath.c_str(), "w");
-
-            std::unordered_map<std::string, FileSpec> files;
-
-            char *bytes = nullptr;
-            int largest = -1;
-            int len;
+                throw(std::runtime_error, std::logic_error) {
+            // Opening the series of files to use in the rest of this
+            // application.
+            std::vector<FILE *> files;
             for (std::string path: paths) {
-                FILE* file = fopen(path.c_str(), "r");
-
-                // Getting the file length.
-                fseek(file, 0, SEEK_END);
-                len = ftell(file);
-                fseek(file, 0, SEEK_SET);
-
-                if (len > largest) {
-                    delete[] bytes;
-                    bytes = new char[len];
+                if (path.size() > 2047) {
+                    for (FILE *opened: files)
+                        fclose(opened);
+                    throw std::runtime_error("Path size is too long '" + path + "'.");
                 }
 
-                fread(bytes, 1, len, file);
-                fwrite(bytes, 1, len, out);
+                FILE *f = fopen(path.c_str(), "r");
+                if (f == nullptr) {
+                    for (FILE *opened: files)
+                        fclose(opened);
+                    throw std::runtime_error("Failed to open file '" + path + "'.");
+                }
+
+                files.push_back(f);
             }
 
+            // Writing out header information.
+            FILE *out = fopen(outPath.c_str(), "w");
+            fprintf(out, "CPAK");
+            uint32_t offset = 0;
+            uint32_t length;
+            for (FILE *f: files) {
+                fseek(f, 0, SEEK_END);
+                length = ftell(f);
+                fseek(f, 0, SEEK_SET);
+
+                fwrite(&offset, 4, 1, out);
+                fwrite(&length, 4, 1, out);
+
+                offset += length;
+            }
+
+            // Writing out the files themselves.
+            uint32_t contentsLength = 0;
+            length = 0;
+            char *contents = nullptr;
+            for (FILE *f: files) {
+                fseek(f, 0, SEEK_END);
+                length = ftell(f);
+                fseek(f, 0, SEEK_SET);
+
+                if (length > contentsLength) {
+                    contentsLength = length;
+                    if (contents != nullptr)
+                        delete[] contents;
+                    contents = new char[contentsLength];
+                }
+
+                fread(contents, 1, length, f);
+                fwrite(contents, 1, length, out);
+                fclose(f);
+            }
+
+            if (contents != nullptr)
+                delete[] contents;
             fclose(out);
         }
 
@@ -154,6 +189,14 @@ namespace clibgame {
             } catch (std::runtime_error) {
                 return false;
             }
+        }
+
+        // Getting file info from a contained file.
+        FileSpec RealPak::fileInfo(std::string path) const
+                throw(std::logic_error) {
+            if (!hasFile(path))
+                throw std::logic_error("Pak does not contain " + path + ".");
+            return files.at(path);
         }
 
         // Checking if a given file exists within the Pak.
